@@ -89,34 +89,36 @@ function ThemeToggle({ className }: { className?: string }) {
     return (
         <div className={className}>
             <div className="flex gap-1">
-                {/* Full-screen toggle with tooltip */}
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Toggle
-                            variant="default"
-                            className="group size-9 data-[state=on]:bg-transparent data-[state=on]:hover:bg-muted"
-                            pressed={isFullscreen}
-                            onPressedChange={toggleFullscreen}
-                            aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"}
-                        >
-                            <Maximize2
-                                size={16}
-                                strokeWidth={2}
-                                className="shrink-0 scale-100 opacity-100 transition-all group-data-[state=on]:scale-0 group-data-[state=on]:opacity-0"
-                                aria-hidden="true"
-                            />
-                            <Minimize2
-                                size={16}
-                                strokeWidth={2}
-                                className="absolute shrink-0 scale-0 opacity-0 transition-all group-data-[state=on]:scale-100 group-data-[state=on]:opacity-100"
-                                aria-hidden="true"
-                            />
-                        </Toggle>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom">
-                        {isFullscreen ? "Exit full screen" : "Enter full screen"}
-                    </TooltipContent>
-                </Tooltip>
+                {/* Hide this full-screen toggle when mobile screen */}
+                <div className="hidden sm:block">
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Toggle
+                                variant="default"
+                                className="group size-9 data-[state=on]:bg-transparent data-[state=on]:hover:bg-muted"
+                                pressed={isFullscreen}
+                                onPressedChange={toggleFullscreen}
+                                aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"}
+                            >
+                                <Maximize2
+                                    size={16}
+                                    strokeWidth={2}
+                                    className="shrink-0 scale-100 opacity-100 transition-all group-data-[state=on]:scale-0 group-data-[state=on]:opacity-0"
+                                    aria-hidden="true"
+                                />
+                                <Minimize2
+                                    size={16}
+                                    strokeWidth={2}
+                                    className="absolute shrink-0 scale-0 opacity-0 transition-all group-data-[state=on]:scale-100 group-data-[state=on]:opacity-100"
+                                    aria-hidden="true"
+                                />
+                            </Toggle>
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom">
+                            {isFullscreen ? "Exit full screen" : "Enter full screen"}
+                        </TooltipContent>
+                    </Tooltip>
+                </div>
                 {/* Theme toggle */}
                 <Toggle
                     variant="default"
