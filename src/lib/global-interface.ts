@@ -17,6 +17,7 @@ export interface Agenda {
   ownerId: string;
   isPublic: boolean;
   createdAt: string;
+  agendaItems?: AgendaItem[];
 }
 
 export interface AgendaItem {
