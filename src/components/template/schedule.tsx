@@ -1,12 +1,15 @@
-import ScheduleItem from "@/components/ui/schedule-item";
-import { Card } from "@/components/ui/card";
+import ScheduleCreate from "@/components/template/schedule-create";
 
 export default function Schedule() {
     return (
-        <div>
-            <Card>
+        <div className="flex flex-col items-center gap-4 sm:w-auto ">
+            <div className="flex justify-center w-full">
+                <ScheduleCreate />
+            </div>
+
+            {/* <Card>
                 <ScheduleItem />
-            </Card>
+            </Card> */}
         </div>
     );
 }

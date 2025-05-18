@@ -1,8 +1,10 @@
 "use client";
 
 import { Toggle } from "@/components/ui/toggle";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Maximize2, Minimize2 } from "lucide-react";
 import { useState, useEffect } from "react";
+// Add Shadcn Tooltip imports
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 type Theme = "light" | "dark";
 
@@ -59,6 +61,25 @@ function ThemeToggle({ className }: { className?: string }) {
         localStorage.setItem("theme-user-preference", "true");
     };
 
+    // Fullscreen state
+    const [isFullscreen, setIsFullscreen] = useState(false);
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement);
+        };
+        document.addEventListener("fullscreenchange", handleFullscreenChange);
+        return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    }, []);
+
+    const toggleFullscreen = () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+    };
+
     // If the theme is not yet determined, render null to prevent hydration mismatch.
     // The component will render correctly on the client after useEffect.
     if (theme === undefined) {
@@ -67,26 +88,57 @@ function ThemeToggle({ className }: { className?: string }) {
 
     return (
         <div className={className}>
-            <Toggle
-                variant="default"
-                className="group size-9 data-[state=on]:bg-transparent data-[state=on]:hover:bg-muted"
-                pressed={theme === "dark"}
-                onPressedChange={toggleTheme}
-                aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-            >
-                <Moon
-                    size={16}
-                    strokeWidth={2}
-                    className="shrink-0 scale-0 opacity-0 transition-all group-data-[state=on]:scale-100 group-data-[state=on]:opacity-100"
-                    aria-hidden="true"
-                />
-                <Sun
-                    size={16}
-                    strokeWidth={2}
-                    className="absolute shrink-0 scale-100 opacity-100 transition-all group-data-[state=on]:scale-0 group-data-[state=on]:opacity-0"
-                    aria-hidden="true"
-                />
-            </Toggle>
+            <div className="flex gap-1">
+                {/* Full-screen toggle with tooltip */}
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Toggle
+                            variant="default"
+                            className="group size-9 data-[state=on]:bg-transparent data-[state=on]:hover:bg-muted"
+                            pressed={isFullscreen}
+                            onPressedChange={toggleFullscreen}
+                            aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"}
+                        >
+                            <Maximize2
+                                size={16}
+                                strokeWidth={2}
+                                className="shrink-0 scale-100 opacity-100 transition-all group-data-[state=on]:scale-0 group-data-[state=on]:opacity-0"
+                                aria-hidden="true"
+                            />
+                            <Minimize2
+                                size={16}
+                                strokeWidth={2}
+                                className="absolute shrink-0 scale-0 opacity-0 transition-all group-data-[state=on]:scale-100 group-data-[state=on]:opacity-100"
+                                aria-hidden="true"
+                            />
+                        </Toggle>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                        {isFullscreen ? "Exit full screen" : "Enter full screen"}
+                    </TooltipContent>
+                </Tooltip>
+                {/* Theme toggle */}
+                <Toggle
+                    variant="default"
+                    className="group size-9 data-[state=on]:bg-transparent data-[state=on]:hover:bg-muted"
+                    pressed={theme === "dark"}
+                    onPressedChange={toggleTheme}
+                    aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+                >
+                    <Moon
+                        size={16}
+                        strokeWidth={2}
+                        className="shrink-0 scale-0 opacity-0 transition-all group-data-[state=on]:scale-100 group-data-[state=on]:opacity-100"
+                        aria-hidden="true"
+                    />
+                    <Sun
+                        size={16}
+                        strokeWidth={2}
+                        className="absolute shrink-0 scale-100 opacity-100 transition-all group-data-[state=on]:scale-0 group-data-[state=on]:opacity-0"
+                        aria-hidden="true"
+                    />
+                </Toggle>
+            </div>
         </div>
     );
 }
