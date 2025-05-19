@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Agenda, AgendaItem } from "@/lib/global-interface";
 import { Separator } from "@/components/ui/separator";
+import ScheduleDetailSection from "@/components/template/schedule-detail-section";
 
 export default function ScheduleCreate() {
     const [agenda, setAgenda] = useState<Agenda>();
@@ -160,38 +161,7 @@ export default function ScheduleCreate() {
                         <>
                             <Separator className="my-5" />
                             <div className="mt-5">
-                                <Label className="mb-1.5 text-md">Schedule Detail</Label>
-                                <ul className="list-disc pl-5">
-                                    {agenda.agendaItems.map(item => (
-                                        <li key={item.id} className="mb-2">
-                                            <div className="font-semibold">{item.title}</div>
-                                            {item.description && (
-                                                <div className="text-sm text-muted-foreground">{item.description}</div>
-                                            )}
-                                            <div className="text-xs text-gray-500">
-                                                {item.location && (
-                                                    <span>
-                                                        Location: {item.location}
-                                                    </span>
-                                                )}
-                                                {(item.startTime || item.endTime) && (
-                                                    <span className={item.location ? "ml-2" : ""}>
-                                                        {item.startTime && (
-                                                            <span>
-                                                                Start: {item.startTime?.replace("T", " ")}
-                                                            </span>
-                                                        )}
-                                                        {item.endTime && (
-                                                            <span className={item.startTime ? "ml-2" : ""}>
-                                                                End: {item.endTime?.replace("T", " ")}
-                                                            </span>
-                                                        )}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
+                                <ScheduleDetailSection agendaItems={agenda.agendaItems} />
                             </div>
                         </>
                     )}
@@ -254,7 +224,7 @@ export default function ScheduleCreate() {
                 </CardContent>
                 <CardFooter className="flex flex-col sm:justify-between sm:flex-row gap-4">
                     <div>
-                        {agenda && (
+                        {agenda && agenda?.id && (
                             <Button
                                 variant="outline"
                                 size="default"
