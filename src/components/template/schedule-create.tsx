@@ -160,7 +160,7 @@ export default function ScheduleCreate() {
                         <>
                             <Separator className="my-5" />
                             <div className="mt-5">
-                                <Label className="mb-1.5">Schedule Detail</Label>
+                                <Label className="mb-1.5 text-md">Schedule Detail</Label>
                                 <ul className="list-disc pl-5">
                                     {agenda.agendaItems.map(item => (
                                         <li key={item.id} className="mb-2">
@@ -199,7 +199,7 @@ export default function ScheduleCreate() {
                         <>
                             <Separator className="my-5" />
                             <div className="flex flex-col gap-3">
-                                <Label htmlFor="agenda-detail-title" className="mb-1.5">Detail</Label>
+                                {/* <Label htmlFor="agenda-detail-title" className="mb-1.5 text-md">Detail</Label> */}
                                 <Input
                                     id="agenda-detail-title"
                                     name="title"
@@ -297,7 +297,7 @@ export default function ScheduleCreate() {
                                 className="w-1/2 sm:w-auto"
                                 onClick={handleSaveSchedule}
                             >
-                                Save schedule
+                                {!agenda?.id ? 'Publish schedule' : 'Save schedule'}
                             </Button>
                         )}
                     </div>
