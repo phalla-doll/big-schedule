@@ -98,11 +98,11 @@ export default function Home() {
 
   return (
     <div className="container sm:mx-auto min-h-screen">
-      <main className="min-h-screen flex flex-col items-center justify-center mx-4 sm:mx-0">
+      <main className="min-h-screen flex flex-col items-center justify-center mx-4 sm:mx-0 my-15 sm:my-20">
         <div
           className="mb-12"
           ref={textContainerRef}
-          style={{ visibility: "hidden" }} // Initially hide the text container
+          style={{ visibility: "hidden" }}
         >
           <h4 className="text-lg sm:text-2xl font-normal mb-4">
             The Big Schedule Agenda
@@ -115,7 +115,6 @@ export default function Home() {
           <Schedule />
         </div>
       </main>
-      {/* <SplitTextStylesheet /> removed */}
     </div>
   );
 };

@@ -178,12 +178,12 @@ export default function ScheduleCreate() {
                                                     <span className={item.location ? "ml-2" : ""}>
                                                         {item.startTime && (
                                                             <span>
-                                                                Start: {item.startTime}
+                                                                Start: {item.startTime?.replace("T", " ")}
                                                             </span>
                                                         )}
                                                         {item.endTime && (
                                                             <span className={item.startTime ? "ml-2" : ""}>
-                                                                End: {item.endTime}
+                                                                End: {item.endTime?.replace("T", " ")}
                                                             </span>
                                                         )}
                                                     </span>
@@ -240,13 +240,13 @@ export default function ScheduleCreate() {
                                     onChange={handleDetailChange}
                                 />
                                 <Button
-                                    variant="default"
+                                    variant="secondary"
                                     size="sm"
                                     className="self-end"
                                     onClick={handleAddDetailItem}
                                     type="button"
                                 >
-                                    Add more
+                                    {detailItem.id ? 'Update schedule' : 'Add to schedule'}
                                 </Button>
                             </div>
                         </>
@@ -288,7 +288,7 @@ export default function ScheduleCreate() {
                                 disabled={!form.title || !form.description}
                                 onClick={() => setIsShowDetailItem(true)}
                             >
-                                Create schedule detail
+                                Schedule detail
                             </Button>
                         ) : (
                             <Button
@@ -297,7 +297,7 @@ export default function ScheduleCreate() {
                                 className="w-1/2 sm:w-auto"
                                 onClick={handleSaveSchedule}
                             >
-                                {!agenda?.id ? 'Publish schedule' : 'Save schedule'}
+                                {!agenda?.id ? 'Publish' : 'Save schedule'}
                             </Button>
                         )}
                     </div>
