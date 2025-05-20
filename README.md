@@ -1,4 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Big Schedule
+
+Big Schedule is a web application for creating, managing, and sharing detailed agendas or schedules. It is built with [Next.js](https://nextjs.org) and leverages modern TypeScript and React patterns.
+
+## What does it do?
+
+Big Schedule allows users to:
+- **Create and customize schedules** with a user-friendly form interface.
+- **Add detailed agenda items** including title, description, start/end time, and location.
+- **Preview and edit schedule details** before publishing.
+- **Mark schedules as public or private**.
+- **(Future)** Generate schedules with AI assistance.
+
+The app is ideal for planning events, meetings, conferences, or personal itineraries.
+
+## Tech Stack
+
+- **Framework:** Next.js (TypeScript)
+- **Frontend:** React, Next.js App Router
+- **Styling:** Tailwind CSS, tw-animate-css, custom CSS variables
+- **State & Utilities:** React hooks, clsx, tailwind-merge
+
+### Popular Libraries
+
+- **UI & Components:**  
+  - [shadcn/ui](https://ui.shadcn.com/) (custom components)  
+  - [@radix-ui/react-*](https://www.radix-ui.com/docs/primitives/overview/introduction) (Dialog, Label, Tooltip, Separator, etc.)  
+  - [lucide-react](https://lucide.dev/) (icon library)  
+  - [Geist font](https://vercel.com/font) (from next/font/google)  
+- **Animation:**  
+  - [framer-motion](https://www.framer.com/motion/)  
+- **Tooling:**  
+  - ESLint (with next/core-web-vitals)  
+  - PostCSS (with Tailwind CSS plugin)  
+  - TypeScript
+
+> The codebase is modular, using a lot of component abstraction and utility hooks.  
+> All styles are managed through Tailwind CSS and custom variables.  
+> You use modern React (function components, hooks) and Next.js features.  
+> The project is set up for easy deployment on Vercel.
+
+To see more dependencies, check your [`package.json`](https://github.com/phalla-doll/big-schedule/blob/main/package.json) directly.
 
 ## Getting Started
 
