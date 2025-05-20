@@ -1,6 +1,6 @@
 "use client";
 
-import { Play } from "lucide-react";
+import { Play, Sparkles } from "lucide-react";
 import { BorderBeam } from "@/components/magicui/border-beam";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
@@ -251,15 +251,30 @@ export default function ScheduleCreate() {
                         )}
 
                         {!agenda?.agendaItems?.length ? (
-                            <Button
-                                variant="default"
-                                size="default"
-                                className="w-1/2 sm:w-auto"
-                                disabled={!form.title || !form.description}
-                                onClick={() => setIsShowDetailItem(true)}
-                            >
-                                Schedule detail
-                            </Button>
+                            <>
+                                <Button
+                                    variant="secondary"
+                                    size="default"
+                                    className="w-1/2 sm:w-auto"
+                                    disabled={!form.title || !form.description}
+                                    onClick={() => alert('AI generation is not implemented yet.')}
+                                    type="button"
+                                    area-label="Generate with AI"
+                                >
+                                    <Sparkles />Generate with AI
+                                </Button>
+                                <Button
+                                    variant="default"
+                                    type="button"
+                                    size="default"
+                                    className="w-1/2 sm:w-auto"
+                                    aria-label="Add schedule detail"
+                                    disabled={!form.title || !form.description}
+                                    onClick={() => setIsShowDetailItem(true)}
+                                >
+                                    Schedule detail
+                                </Button>
+                            </>
                         ) : (
                             <Button
                                 variant="default"
