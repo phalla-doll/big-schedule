@@ -1,6 +1,6 @@
 import { AgendaItem } from "@/lib/global-interface";
 import { Badge } from "@/components/ui/badge";
-import { MoveRight } from "lucide-react";
+import { EllipsisVertical, MoveRight } from "lucide-react";
 import {
     Timeline,
     TimelineItem,
@@ -11,6 +11,13 @@ import {
     TimelineIndicator,
     TimelineContent,
 } from "@/components/ui/timeline";
+import { Button } from "@/components/ui/button";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 interface ScheduleDetailSectionProps {
     agendaItems: AgendaItem[];
@@ -39,7 +46,21 @@ export default function ScheduleDetailSection({ agendaItems }: ScheduleDetailSec
 
     return (
         <>
-            <label className="mb-1.5 text-md">Schedule Detail</label>
+            <div className="flex justify-between gap-2 items-center">
+                <label className="mb-1.5 text-md">Schedule Detail</label>
+                <div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button size="sm" variant="ghost">
+                                <EllipsisVertical className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            </div>
             {Object.entries(grouped).map(([date, items]) => (
                 <div key={date} className="mb-5">
                     <Badge variant="outline" className="mb-3 mt-5 text-sm">
@@ -56,7 +77,7 @@ export default function ScheduleDetailSection({ agendaItems }: ScheduleDetailSec
                                     className="group-data-[orientation=vertical]/timeline:sm:ms-40"
                                 >
                                     <TimelineHeader>
-                                        <TimelineSeparator/>
+                                        <TimelineSeparator />
                                         <TimelineDate className="group-data-[orientation=vertical]/timeline:sm:absolute group-data-[orientation=vertical]/timeline:sm:-left-36 group-data-[orientation=vertical]/timeline:sm:w-20 group-data-[orientation=vertical]/timeline:sm:text-right">
                                             {(startTime || endTime) ? (
                                                 <>

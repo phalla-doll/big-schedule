@@ -93,26 +93,29 @@ function ThemeToggle({ className }: { className?: string }) {
                 <div className="hidden sm:block">
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Toggle
-                                variant="default"
-                                className="group size-9 data-[state=on]:bg-transparent data-[state=on]:hover:bg-muted"
-                                pressed={isFullscreen}
-                                onPressedChange={toggleFullscreen}
-                                aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"}
-                            >
-                                <Maximize2
-                                    size={16}
-                                    strokeWidth={2}
-                                    className="shrink-0 scale-100 opacity-100 transition-all group-data-[state=on]:scale-0 group-data-[state=on]:opacity-0"
-                                    aria-hidden="true"
-                                />
-                                <Minimize2
-                                    size={16}
-                                    strokeWidth={2}
-                                    className="absolute shrink-0 scale-0 opacity-0 transition-all group-data-[state=on]:scale-100 group-data-[state=on]:opacity-100"
-                                    aria-hidden="true"
-                                />
-                            </Toggle>
+                            <span>
+                                <Toggle
+                                    variant="default"
+                                    size="sm"
+                                    className="group data-[state=on]:bg-transparent data-[state=on]:hover:bg-muted"
+                                    pressed={isFullscreen}
+                                    onPressedChange={toggleFullscreen}
+                                    aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"}
+                                >
+                                    <Maximize2
+                                        size={16}
+                                        strokeWidth={2}
+                                        className="shrink-0 scale-100 opacity-100 transition-all group-data-[state=on]:scale-0 group-data-[state=on]:opacity-0"
+                                        aria-hidden="true"
+                                    />
+                                    <Minimize2
+                                        size={16}
+                                        strokeWidth={2}
+                                        className="absolute shrink-0 scale-0 opacity-0 transition-all group-data-[state=on]:scale-100 group-data-[state=on]:opacity-100"
+                                        aria-hidden="true"
+                                    />
+                                </Toggle>
+                            </span>
                         </TooltipTrigger>
                         <TooltipContent side="bottom">
                             {isFullscreen ? "Exit full screen" : "Enter full screen"}
@@ -122,7 +125,8 @@ function ThemeToggle({ className }: { className?: string }) {
                 {/* Theme toggle */}
                 <Toggle
                     variant="default"
-                    className="group size-9 data-[state=on]:bg-transparent data-[state=on]:hover:bg-muted"
+                    size="sm"
+                    className="group data-[state=on]:bg-transparent data-[state=on]:hover:bg-muted"
                     pressed={theme === "dark"}
                     onPressedChange={toggleTheme}
                     aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
