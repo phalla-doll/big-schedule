@@ -4,14 +4,12 @@ import { Play, Sparkles } from "lucide-react";
 import { BorderBeam } from "@/components/magicui/border-beam";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Agenda, AgendaItem } from "@/lib/global-interface";
 import { Separator } from "@/components/ui/separator";
 import ScheduleDetailSection from "@/components/template/schedule-detail-section";
+import ScheduleForm from "./ScheduleForm";
+import AgendaDetailForm from "@/components/template/AgendaDetailForm";
 
 export default function ScheduleCreate() {
     const [agenda, setAgenda] = useState<Agenda>();
@@ -265,38 +263,7 @@ export default function ScheduleCreate() {
                     <CardDescription>Fill in the details below to create a new agenda or schedule item.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form className="flex flex-col gap-4">
-                        <div>
-                            <Label htmlFor="agenda-title" className="mb-1.5">Title</Label>
-                            <Input
-                                id="agenda-title"
-                                name="title"
-                                type="text"
-                                placeholder="Enter agenda title"
-                                value={form.title}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="agenda-description" className="mb-1.5">Description</Label>
-                            <Textarea
-                                id="agenda-description"
-                                name="description"
-                                placeholder="Enter agenda description"
-                                value={form.description}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Checkbox
-                                id="agenda-public"
-                                name="isPublic"
-                                checked={form.isPublic}
-                                onCheckedChange={checked => setForm(f => ({ ...f, isPublic: !!checked }))}
-                            />
-                            <Label htmlFor="agenda-public" className="text-sm">Public</Label>
-                        </div>
-                    </form>
+                    <ScheduleForm form={form} handleChange={handleChange} setForm={setForm} />
                     {agenda?.agendaItems?.length && (
                         <>
                             <Separator className="my-5" />
@@ -308,57 +275,11 @@ export default function ScheduleCreate() {
                     {isShowDetailItem && (
                         <>
                             <Separator className="my-5" />
-                            <div className="flex flex-col gap-3">
-                                {/* <Label htmlFor="agenda-detail-title" className="mb-1.5 text-md">Detail</Label> */}
-                                <Input
-                                    id="agenda-detail-title"
-                                    name="title"
-                                    type="text"
-                                    placeholder="Detail title"
-                                    value={detailItem.title}
-                                    onChange={handleDetailChange}
-                                />
-                                <Textarea
-                                    id="agenda-detail-description"
-                                    name="description"
-                                    placeholder="Detail description"
-                                    value={detailItem.description}
-                                    onChange={handleDetailChange}
-                                />
-                                <Input
-                                    id="agenda-detail-start"
-                                    name="startTime"
-                                    type="datetime-local"
-                                    placeholder="Start time"
-                                    value={detailItem.startTime}
-                                    onChange={handleDetailChange}
-                                />
-                                <Input
-                                    id="agenda-detail-end"
-                                    name="endTime"
-                                    type="datetime-local"
-                                    placeholder="End time"
-                                    value={detailItem.endTime}
-                                    onChange={handleDetailChange}
-                                />
-                                <Input
-                                    id="agenda-detail-location"
-                                    name="location"
-                                    type="text"
-                                    placeholder="Location"
-                                    value={detailItem.location}
-                                    onChange={handleDetailChange}
-                                />
-                                <Button
-                                    variant="secondary"
-                                    size="sm"
-                                    className="self-end"
-                                    onClick={handleAddDetailItem}
-                                    type="button"
-                                >
-                                    {detailItem.id ? 'Update schedule' : 'Add to schedule'}
-                                </Button>
-                            </div>
+                            <AgendaDetailForm
+                                detailItem={detailItem}
+                                handleDetailChange={handleDetailChange}
+                                handleAddDetailItem={handleAddDetailItem}
+                            />
                         </>
                     )}
                 </CardContent>
