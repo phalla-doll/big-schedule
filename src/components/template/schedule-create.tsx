@@ -11,7 +11,7 @@ import ScheduleDetailSection from "@/components/template/schedule-detail-section
 import ScheduleForm from "./schedule-agenda-form";
 import AgendaDetailForm from "@/components/template/agenda-detail-form";
 
-export default function ScheduleCreate() {
+export default function ScheduleCreate({ onPreview }: { onPreview?: (agenda: Agenda) => void }) {
     const [agenda, setAgenda] = useState<Agenda>();
     const [isShowDetailItem, setIsShowDetailItem] = useState(false);
     const [isGeneratingContent, setIsGeneratingContent] = useState(false);
@@ -252,7 +252,7 @@ export default function ScheduleCreate() {
                 })),
             });
             setIsShowDetailItem(false);
-        }, 2500);
+        }, 2000);
     };
 
     return (
@@ -306,6 +306,11 @@ export default function ScheduleCreate() {
                                 variant="outline"
                                 size="default"
                                 className="w-1/2 sm:w-auto"
+                                onClick={() => {
+                                    if (agenda && onPreview) {
+                                        onPreview(agenda);
+                                    }
+                                }}
                             >
                                 Preview
                             </Button>
