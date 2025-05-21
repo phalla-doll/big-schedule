@@ -3,6 +3,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { AgendaItem } from "@/lib/global-interface";
+import { Info } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 type ScheduleFormProps = {
     form: {
@@ -53,7 +55,21 @@ export default function ScheduleForm({ form, handleChange, setForm }: ScheduleFo
                     checked={form.isPublic}
                     onCheckedChange={checked => setForm(f => ({ ...f, isPublic: !!checked }))}
                 />
-                <Label htmlFor="agenda-public" className="text-sm">Public</Label>
+                <Label htmlFor="agenda-public" className="text-sm">
+                    Public{" "}
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <span tabIndex={0}>
+                                    <Info size={16} className="text-muted-foreground" />
+                                </span>
+                            </TooltipTrigger>
+                            <TooltipContent side="top">
+                                Public can be shared with anyone with the link
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                </Label>
             </div>
         </form>
     );

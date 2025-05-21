@@ -8,8 +8,8 @@ import { useState } from "react";
 import { Agenda, AgendaItem } from "@/lib/global-interface";
 import { Separator } from "@/components/ui/separator";
 import ScheduleDetailSection from "@/components/template/schedule-detail-section";
-import ScheduleForm from "./ScheduleForm";
-import AgendaDetailForm from "@/components/template/AgendaDetailForm";
+import ScheduleForm from "./schedule-agenda-form";
+import AgendaDetailForm from "@/components/template/agenda-detail-form";
 
 export default function ScheduleCreate() {
     const [agenda, setAgenda] = useState<Agenda>();
