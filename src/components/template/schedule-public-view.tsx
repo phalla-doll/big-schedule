@@ -1,6 +1,6 @@
 import { Agenda } from "@/lib/global-interface";
 import ScheduleDetailSection from "@/components/template/schedule-detail-section";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { MoveLeft } from "lucide-react";
 
 export default function SchedulePublicView({

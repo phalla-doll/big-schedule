@@ -1,6 +1,6 @@
 "use client";
 
-import { Play, Sparkles } from "lucide-react";
+import { Loader2, Play, Sparkles } from "lucide-react";
 import { BorderBeam } from "@/components/magicui/border-beam";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
@@ -322,12 +322,21 @@ export default function ScheduleCreate({ onPreview }: { onPreview?: (agenda: Age
                                     variant="secondary"
                                     size="default"
                                     className="w-1/2 sm:w-auto"
-                                    disabled={form.title !== ''}
+                                    disabled={form.title !== '' || isGeneratingContent}
                                     onClick={handleGenerateWithAI}
                                     type="button"
                                     area-label="Generate with AI"
                                 >
-                                    <Sparkles />{isGeneratingContent ? 'Generating...' : 'Generate with AI'}
+                                    {isGeneratingContent ? (
+                                        <span className="flex items-center gap-2">
+                                            <Loader2 className="animate-spin" />
+                                            Generating...
+                                        </span>
+                                    ) : (
+                                        <span className="flex items-center gap-2">
+                                            <Sparkles /> Generate with AI
+                                        </span>
+                                    )}
                                 </Button>
                                 <Button
                                     variant="default"
@@ -335,7 +344,7 @@ export default function ScheduleCreate({ onPreview }: { onPreview?: (agenda: Age
                                     size="default"
                                     className="w-1/2 sm:w-auto"
                                     aria-label="Add schedule detail"
-                                    disabled={!form.title || !form.description}
+                                    disabled={!form.title || !form.description || isGeneratingContent}
                                     onClick={() => setIsShowDetailItem(true)}
                                 >
                                     Schedule detail
