@@ -1,7 +1,6 @@
 import { Agenda } from "@/lib/global-interface";
 import ScheduleDetailSection from "@/components/template/schedule-detail-section";
 import { Button } from "@/components/ui/button";
-import { MoveLeft } from "lucide-react";
 
 export default function SchedulePublicView({
     agenda,
@@ -14,17 +13,20 @@ export default function SchedulePublicView({
         <div className="relative w-full sm:w-5xl overflow-hidden">
             {agenda && agenda?.agendaItems?.length ? (
                 <>
-                    <ScheduleDetailSection agendaItems={agenda.agendaItems} isInPreviewMode={true}/>
-                    <div className="my-15 flex justify-center w-full">
+                    <ScheduleDetailSection agendaItems={agenda.agendaItems} isInPreviewMode={true} />
+                    <div className="my-15 flex flex-col sm:flex-row justify-end w-full gap-4">
                         <Button
                             variant="ghost"
-                            className=""
+                            className="text-sm w-full sm:w-auto"
                             onClick={() => onBackToEdit(true)}
                         >
-                            <span className="flex items-center gap-2">
-                                <MoveLeft className="h-4 w-4" />
-                                Back to home
-                            </span>
+                            Close preview
+                        </Button>
+                        <Button
+                            variant="default"
+                            className="text-sm w-full sm:w-auto"
+                        >
+                            Publish
                         </Button>
                     </div>
                 </>

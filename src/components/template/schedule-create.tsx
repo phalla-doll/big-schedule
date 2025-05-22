@@ -4,15 +4,15 @@ import { Loader2, Play, Sparkles } from "lucide-react";
 import { BorderBeam } from "@/components/magicui/border-beam";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Agenda, AgendaItem } from "@/lib/global-interface";
 import { Separator } from "@/components/ui/separator";
 import ScheduleDetailSection from "@/components/template/schedule-detail-section";
 import ScheduleForm from "./schedule-agenda-form";
 import AgendaDetailForm from "@/components/template/agenda-detail-form";
 
-export default function ScheduleCreate({ onPreview }: { onPreview?: (agenda: Agenda) => void }) {
-    const [agenda, setAgenda] = useState<Agenda>();
+export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPreview?: (agenda: Agenda) => void, agendaFromParent: Agenda | undefined; }) {
+    const [agenda, setAgenda] = useState<Agenda | undefined>(agendaFromParent);
     const [isShowDetailItem, setIsShowDetailItem] = useState(false);
     const [isGeneratingContent, setIsGeneratingContent] = useState(false);
     const [form, setForm] = useState<{
@@ -33,6 +33,19 @@ export default function ScheduleCreate({ onPreview }: { onPreview?: (agenda: Age
         endTime: "",
         location: "",
     });
+
+    // Sync agenda state with agendaFromParent if it changes
+    useEffect(() => {
+        if (agendaFromParent && agendaFromParent?.title?.length) {
+            setAgenda(agendaFromParent); // update agenda state
+            setForm({
+                title: agendaFromParent.title,
+                description: agendaFromParent.description || '',
+                isPublic: agendaFromParent.isPublic || false,
+                agendaItems: agendaFromParent.agendaItems || [],
+            }); // update form fields
+        }
+    }, [agendaFromParent]);
 
     // Handle input changes
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

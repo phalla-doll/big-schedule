@@ -134,7 +134,7 @@ export default function Schedule() {
                         {isViewMode ? (
                             <SchedulePublicView agenda={agenda} onBackToEdit={handleToggleViewMode} />
                         ) : (
-                            <ScheduleCreate onPreview={handleAgenda} />
+                            <ScheduleCreate onPreview={handleAgenda} agendaFromParent={agenda} />
                         )}
                     </div>
                 </div>
