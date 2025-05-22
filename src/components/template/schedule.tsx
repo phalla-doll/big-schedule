@@ -1,11 +1,11 @@
 "use client";
 
 import ScheduleCreate from "@/components/template/schedule-create";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import SchedulePublicView from "@/components/template/schedule-public-view";
 import { Agenda } from "@/lib/global-interface";
-import { useEffect, useRef } from "react";
-import { animate, stagger } from "framer-motion";
+import { animate, stagger, AnimatePresence, motion } from "framer-motion";
+import Lenis from "@studio-freight/lenis";
 
 function customSplitText(
     element: HTMLElement,
@@ -40,6 +40,26 @@ function customSplitText(
 export default function Schedule() {
 
     const textContainerRef = useRef<HTMLDivElement>(null);
+
+    // Lenis setup
+    useEffect(() => {
+        const lenis = new Lenis({
+            // Optional: customize options here
+            lerp: 0.08, // Adjust for speed vs. smoothness (lower is smoother but can feel slower)
+            wheelMultiplier: 1.3, // Increase for faster mouse wheel scrolling
+        });
+
+        function raf(time: number) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+
+        requestAnimationFrame(raf);
+
+        return () => {
+            lenis.destroy();
+        };
+    }, []);
 
     useEffect(() => {
         const container = textContainerRef.current;
@@ -131,11 +151,29 @@ export default function Schedule() {
             <div className="w-full flex flex-col justify-center">
                 <div className="flex flex-col items-center gap-4 sm:w-auto">
                     <div className="flex justify-center w-full">
-                        {isViewMode ? (
-                            <SchedulePublicView agenda={agenda} onBackToEdit={handleToggleViewMode} />
-                        ) : (
-                            <ScheduleCreate onPreview={handleAgenda} agendaFromParent={agenda} />
-                        )}
+                        <AnimatePresence mode="wait">
+                            {isViewMode ? (
+                                <motion.div
+                                    key="public-view"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <SchedulePublicView agenda={agenda} onBackToEdit={handleToggleViewMode} />
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="create-view"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <ScheduleCreate onPreview={handleAgenda} agendaFromParent={agenda} />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
                 </div>
             </div>
