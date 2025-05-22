@@ -21,9 +21,10 @@ import {
 
 interface ScheduleDetailSectionProps {
     agendaItems: AgendaItem[];
+    isInPreviewMode: boolean;
 }
 
-export default function ScheduleDetailSection({ agendaItems }: ScheduleDetailSectionProps) {
+export default function ScheduleDetailSection({ agendaItems, isInPreviewMode }: ScheduleDetailSectionProps) {
     // Group items by date (YYYY-MM-DD)
     const grouped: Record<string, AgendaItem[]> = {};
     agendaItems.forEach(item => {
@@ -46,21 +47,23 @@ export default function ScheduleDetailSection({ agendaItems }: ScheduleDetailSec
 
     return (
         <>
-            <div className="flex justify-between gap-2 items-center">
-                <label className="mb-1.5 text-md">Schedule Detail</label>
-                <div>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button size="sm" variant="ghost">
-                                <EllipsisVertical className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+            {!isInPreviewMode && (
+                <div className="flex justify-between gap-2 items-center">
+                    <label className="mb-1.5 text-md">Schedule Detail</label>
+                    <div>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button size="sm" variant="ghost">
+                                    <EllipsisVertical className="h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem>Edit</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </div>
-            </div>
+            )}
             {Object.entries(grouped).map(([date, items]) => (
                 <div key={date} className="mb-5">
                     <Badge variant="outline" className="mb-3 mt-5 text-sm">

@@ -268,7 +268,7 @@ export default function ScheduleCreate({ onPreview }: { onPreview?: (agenda: Age
                         <>
                             <Separator className="my-5" />
                             <div className="mt-5">
-                                <ScheduleDetailSection agendaItems={agenda.agendaItems} />
+                                <ScheduleDetailSection agendaItems={agenda.agendaItems} isInPreviewMode={false} />
                             </div>
                         </>
                     )}

@@ -14,7 +14,7 @@ export default function SchedulePublicView({
         <div className="relative w-full sm:w-5xl overflow-hidden">
             {agenda && agenda?.agendaItems?.length ? (
                 <>
-                    <ScheduleDetailSection agendaItems={agenda.agendaItems} />
+                    <ScheduleDetailSection agendaItems={agenda.agendaItems} isInPreviewMode={true}/>
                     <div className="my-15 flex justify-center w-full">
                         <Button
                             variant="ghost"
