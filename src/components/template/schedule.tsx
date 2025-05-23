@@ -45,8 +45,8 @@ export default function Schedule() {
     useEffect(() => {
         const lenis = new Lenis({
             // Optional: customize options here
-            lerp: 0.08, // Adjust for speed vs. smoothness (lower is smoother but can feel slower)
-            wheelMultiplier: 1.3, // Increase for faster mouse wheel scrolling
+            lerp: 0.85, // Adjust for speed vs. smoothness (lower is smoother but can feel slower)
+            wheelMultiplier: 1.2, // Increase for faster mouse wheel scrolling
         });
 
         function raf(time: number) {
