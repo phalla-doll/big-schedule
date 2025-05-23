@@ -143,7 +143,7 @@ export default function Schedule() {
                     {(isViewMode && agenda?.title) ? agenda.title : 'What schedule would you like to create today?'}
                 </h1>
                 {isViewMode && agenda.description && (
-                    <h4 className="text-lg sm:text-2xl text-muted-foreground w-full sm:w-4xl font-normal mt-5">
+                    <h4 className="text-lg sm:text-xl text-muted-foreground w-full sm:w-4xl font-normal mt-5">
                         {agenda.description}
                     </h4>
                 )}
