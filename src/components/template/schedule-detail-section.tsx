@@ -108,7 +108,7 @@ export default function ScheduleDetailSection({ agendaItems, isInPreviewMode }: 
                                         <TimelineSeparator
                                             className={((active || passed) ? "bg-green-500" : "")}
                                         />
-                                        <TimelineDate className="group-data-[orientation=vertical]/timeline:sm:absolute group-data-[orientation=vertical]/timeline:sm:-left-36 group-data-[orientation=vertical]/timeline:sm:w-20 group-data-[orientation=vertical]/timeline:sm:text-right">
+                                        <TimelineDate className={"group-data-[orientation=vertical]/timeline:sm:absolute group-data-[orientation=vertical]/timeline:sm:-left-36 group-data-[orientation=vertical]/timeline:sm:w-20 group-data-[orientation=vertical]/timeline:sm:text-right" + (active ? " text-green-500" : "")}>
                                             {(startTime || endTime) ? (
                                                 <>
                                                     <span className="flex items-center gap-1 -mt-1">
