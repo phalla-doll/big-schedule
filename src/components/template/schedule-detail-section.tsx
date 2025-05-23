@@ -18,6 +18,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useEffect, useState } from "react";
 
 interface ScheduleDetailSectionProps {
     agendaItems: AgendaItem[];
@@ -43,6 +44,28 @@ export default function ScheduleDetailSection({ agendaItems, isInPreviewMode }: 
             month: "long",
             year: "numeric",
         });
+    }
+
+    // Track current time, update every minute
+    const [now, setNow] = useState<Date>(new Date());
+    useEffect(() => {
+        const interval = setInterval(() => setNow(new Date()), 60000);
+        return () => clearInterval(interval);
+    }, []);
+
+    // Helper: check if now is within startTime and endTime
+    function isActiveItem(item: AgendaItem) {
+        if (!item.startTime || !item.endTime) return false;
+        const start = new Date(item.startTime);
+        const end = new Date(item.endTime);
+        return now >= start && now <= end;
+    }
+
+    // Helper: check if now is after endTime
+    function isPassedItem(item: AgendaItem) {
+        if (!item.endTime) return false;
+        const end = new Date(item.endTime);
+        return now > end;
     }
 
     return (
@@ -73,6 +96,8 @@ export default function ScheduleDetailSection({ agendaItems, isInPreviewMode }: 
                         {items.map(item => {
                             const startTime = item.startTime ? item.startTime.split("T")[1]?.slice(0, 5) : "";
                             const endTime = item.endTime ? item.endTime.split("T")[1]?.slice(0, 5) : "";
+                            const active = isActiveItem(item);
+                            const passed = isPassedItem(item);
                             return (
                                 <TimelineItem
                                     key={item.id}
@@ -80,7 +105,9 @@ export default function ScheduleDetailSection({ agendaItems, isInPreviewMode }: 
                                     className="group-data-[orientation=vertical]/timeline:sm:ms-40"
                                 >
                                     <TimelineHeader>
-                                        <TimelineSeparator />
+                                        <TimelineSeparator
+                                            className={((active || passed) ? "bg-green-600" : "")}
+                                        />
                                         <TimelineDate className="group-data-[orientation=vertical]/timeline:sm:absolute group-data-[orientation=vertical]/timeline:sm:-left-36 group-data-[orientation=vertical]/timeline:sm:w-20 group-data-[orientation=vertical]/timeline:sm:text-right">
                                             {(startTime || endTime) ? (
                                                 <>
@@ -93,7 +120,9 @@ export default function ScheduleDetailSection({ agendaItems, isInPreviewMode }: 
                                             ) : null}
                                         </TimelineDate>
                                         <TimelineTitle className="sm:-mt-0.5">{item.title}</TimelineTitle>
-                                        <TimelineIndicator />
+                                        <TimelineIndicator
+                                            className={(active ? "border-green-600" : passed ? "bg-green-500" : "")}
+                                        />
                                     </TimelineHeader>
                                     <TimelineContent>
                                         {item.description && (
