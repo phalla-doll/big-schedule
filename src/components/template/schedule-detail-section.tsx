@@ -106,7 +106,7 @@ export default function ScheduleDetailSection({ agendaItems, isInPreviewMode }: 
                                 >
                                     <TimelineHeader>
                                         <TimelineSeparator
-                                            className={((active || passed) ? "bg-green-600" : "")}
+                                            className={((active || passed) ? "bg-green-500" : "")}
                                         />
                                         <TimelineDate className="group-data-[orientation=vertical]/timeline:sm:absolute group-data-[orientation=vertical]/timeline:sm:-left-36 group-data-[orientation=vertical]/timeline:sm:w-20 group-data-[orientation=vertical]/timeline:sm:text-right">
                                             {(startTime || endTime) ? (
@@ -121,7 +121,7 @@ export default function ScheduleDetailSection({ agendaItems, isInPreviewMode }: 
                                         </TimelineDate>
                                         <TimelineTitle className="sm:-mt-0.5">{item.title}</TimelineTitle>
                                         <TimelineIndicator
-                                            className={(active ? "border-green-600" : passed ? "bg-green-500" : "")}
+                                            className={(active ? "border-green-500" : passed ? "bg-green-500" : "")}
                                         />
                                     </TimelineHeader>
                                     <TimelineContent>
