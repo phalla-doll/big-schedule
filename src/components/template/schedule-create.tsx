@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Play, Sparkles } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
 import { BorderBeam } from "@/components/magicui/border-beam";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
@@ -10,6 +10,8 @@ import { Separator } from "@/components/ui/separator";
 import ScheduleDetailSection from "@/components/template/schedule-detail-section";
 import ScheduleForm from "./schedule-agenda-form";
 import AgendaDetailForm from "@/components/template/agenda-detail-form";
+import { generatedAgendaItems } from "@/components/template/generated-agenda-items";
+import { HowItWorksButton } from "@/components/template/how-it-works-button";
 
 export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPreview?: (agenda: Agenda) => void, agendaFromParent: Agenda | undefined; }) {
     const [agenda, setAgenda] = useState<Agenda | undefined>(agendaFromParent);
@@ -137,110 +139,11 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
         const tripStartDate = nextMonth;
         setIsGeneratingContent(true);
 
-        const generatedAgendaItems: Omit<AgendaItem, 'id' | 'agendaId' | 'createdAt'>[] = [
-            {
-                title: "Day 1: Tokyo Arrival",
-                description: "Arrive at Narita/Haneda Airport and transfer to your hotel in Shinjuku.",
-                startTime: new Date(tripStartDate.setDate(tripStartDate.getDate())).toISOString().substring(0, 16), // 09:00
-                endTime: new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate(), 11, 0).toISOString().substring(0, 16),
-                location: "Shinjuku, Tokyo",
-            },
-            {
-                title: "Day 1: Lunch at Local Izakaya",
-                description: "Enjoy a traditional Japanese lunch at a cozy izakaya in Shinjuku.",
-                startTime: new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate(), 12, 0).toISOString().substring(0, 16),
-                endTime: new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate(), 13, 0).toISOString().substring(0, 16),
-                location: "Shinjuku, Tokyo",
-            },
-            {
-                title: "Day 1: Shinjuku Gyoen National Garden",
-                description: "Stroll through the beautiful Shinjuku Gyoen National Garden and relax after your flight.",
-                startTime: new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate(), 13, 30).toISOString().substring(0, 16),
-                endTime: new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate(), 15, 0).toISOString().substring(0, 16),
-                location: "Shinjuku Gyoen, Tokyo",
-            },
-            {
-                title: "Day 1: Explore Omoide Yokocho",
-                description: "Wander through Omoide Yokocho ('Piss Alley'), famous for its tiny bars and yakitori.",
-                startTime: new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate(), 17, 0).toISOString().substring(0, 16),
-                endTime: new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate(), 18, 30).toISOString().substring(0, 16),
-                location: "Omoide Yokocho, Shinjuku",
-            },
-            {
-                title: "Day 1: Tokyo Metropolitan Government Building",
-                description: "Visit the observation deck for panoramic city views.",
-                startTime: new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate(), 19, 0).toISOString().substring(0, 16),
-                endTime: new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate(), 20, 0).toISOString().substring(0, 16),
-                location: "Tokyo Metropolitan Government Building",
-            },
-            {
-                title: "Day 1: Evening Walk in Kabukicho",
-                description: "Take an evening stroll through the vibrant Kabukicho district, famous for its neon lights and entertainment.",
-                startTime: new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate(), 20, 0).toISOString().substring(0, 16),
-                endTime: new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate(), 21, 0).toISOString().substring(0, 16),
-                location: "Kabukicho, Shinjuku, Tokyo",
-            },
-            {
-                title: "Day 2: Culture & Pop in Shibuya & Harajuku",
-                description: "Morning: Visit Meiji Jingu Shrine. Afternoon: Explore Takeshita Street in Harajuku, try unique street food. Late Afternoon: Walk the iconic Shibuya Scramble Crossing and visit the Hachiko statue. Evening: Dinner and shopping in Shibuya.",
-                startTime: new Date(tripStartDate.setDate(tripStartDate.getDate() + 1)).toISOString().substring(0, 10) + "T09:00",
-                endTime: new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate(), 20, 0).toISOString().substring(0, 16),
-                location: "Shibuya & Harajuku, Tokyo",
-            },
-            {
-                title: "Day 3: Tradition in Asakusa & Sumida River",
-                description: "Morning: Explore Senso-ji Temple and Nakamise-dori Street in Asakusa. Afternoon: Take a Sumida River cruise. Late Afternoon: Visit the Tokyo Skytree for stunning views. Evening: Dinner in Asakusa.",
-                startTime: new Date(tripStartDate.setDate(tripStartDate.getDate() + 1)).toISOString().substring(0, 10) + "T09:30",
-                endTime: new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate(), 21, 0).toISOString().substring(0, 16),
-                location: "Asakusa, Tokyo",
-            },
-            {
-                title: "Day 4: Day Trip to Hakone",
-                description: "Full day trip to Hakone. Enjoy a scenic boat cruise on Lake Ashi, take the Hakone Ropeway (see volcanic hot springs), visit the Hakone Open-Air Museum. Hope for views of Mount Fuji (weather permitting). Evening: Return to Tokyo.",
-                startTime: new Date(tripStartDate.setDate(tripStartDate.getDate() + 1)).toISOString().substring(0, 10) + "T08:00",
-                endTime: new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate(), 19, 0).toISOString().substring(0, 16),
-                location: "Hakone",
-            },
-            {
-                title: "Day 5: Ueno Park, Museums & Departure",
-                description: "Morning: Visit Ueno Park, explore one of its museums (e.g., Tokyo National Museum). Afternoon: Last-minute souvenir shopping at Ameya-Yokocho Market. Transfer to Narita/Haneda Airport for departure.",
-                startTime: new Date(tripStartDate.setDate(tripStartDate.getDate() + 1)).toISOString().substring(0, 10) + "T09:00",
-                endTime: new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate(), 17, 0).toISOString().substring(0, 16),
-                location: "Ueno, Tokyo",
-            },
-            {
-                title: "Day 3: Tradition in Asakusa & Sumida River",
-                description: "Morning: Explore Senso-ji Temple and Nakamise-dori Street in Asakusa. Afternoon: Take a Sumida River cruise. Late Afternoon: Visit the Tokyo Skytree for stunning views. Evening: Dinner in Asakusa.",
-                startTime: new Date(tripStartDate.setDate(tripStartDate.getDate() + 1)).toISOString().substring(0, 10) + "T09:30", // Day 3
-                endTime: new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate(), 21, 0).toISOString().substring(0, 16),
-                location: "Asakusa, Tokyo",
-            },
-            {
-                title: "Day 4: Day Trip to Hakone",
-                description: "Full day trip to Hakone. Enjoy a scenic boat cruise on Lake Ashi, take the Hakone Ropeway (see volcanic hot springs), visit the Hakone Open-Air Museum. Hope for views of Mount Fuji (weather permitting). Evening: Return to Tokyo.",
-                startTime: new Date(tripStartDate.setDate(tripStartDate.getDate() + 1)).toISOString().substring(0, 10) + "T08:00", // Day 4
-                endTime: new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate(), 19, 0).toISOString().substring(0, 16),
-                location: "Hakone",
-            },
-            {
-                title: "Day 5: Ueno Park, Museums & Departure",
-                description: "Morning: Visit Ueno Park, explore one of its museums (e.g., Tokyo National Museum). Afternoon: Last-minute souvenir shopping at Ameya-Yokocho Market. Transfer to Narita/Haneda Airport for departure.",
-                startTime: new Date(tripStartDate.setDate(tripStartDate.getDate() + 1)).toISOString().substring(0, 10) + "T09:00", // Day 5
-                endTime: new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate(), 17, 0).toISOString().substring(0, 16),
-                location: "Ueno, Tokyo",
-            },
-        ];
-
         const newAgenda: Omit<Agenda, 'id' | 'ownerId' | 'createdAt'> & { agendaItems: AgendaItem[] } = {
-            title: "5 Days Epic Japan Adventure",
-            description: "An AI-crafted itinerary for an unforgettable 5-day journey through the highlights of Japan, focusing on Tokyo and a day trip to Hakone.",
+            title: "3 Days Epic Japan Adventure",
+            description: "An AI-crafted itinerary for an unforgettable 3-day journey through the highlights of Japan, focusing on Tokyo and a day trip to Hakone.",
             isPublic: true,
-            agendaItems: generatedAgendaItems.map(item => ({
-                ...item,
-                id: crypto.randomUUID(),
-                agendaId: generatedAgendaId,
-                createdAt: now,
-            })),
+            agendaItems: generatedAgendaItems(tripStartDate, generatedAgendaId, now),
         };
 
         setTimeout(() => {
@@ -273,7 +176,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
             <Card className="relative w-full sm:w-3xl overflow-hidden">
                 <CardHeader>
                     <CardTitle>Create New Schedule</CardTitle>
-                    <CardDescription>Fill in the details below to create a new agenda or schedule item.</CardDescription>
+                    <CardDescription>Fill in the details below.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <ScheduleForm form={form} handleChange={handleChange} setForm={setForm} />
@@ -298,20 +201,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
                 </CardContent>
                 <CardFooter className="flex flex-col sm:justify-between sm:flex-row gap-4">
                     <div>
-                        {agenda && agenda?.id && (
-                            <Button
-                                variant="outline"
-                                size="default"
-                                className="w-full sm:w-auto"
-                                disabled={!agenda.agendaItems?.length}
-                                onClick={() => {
-                                    // Handle play action
-                                    console.log("Play clicked", form);
-                                }}
-                            >
-                                <Play className="size-4" /> Play now
-                            </Button>
-                        )}
+                        <HowItWorksButton />
                     </div>
                     <div className="flex w-full sm:w-auto gap-4">
                         {agenda?.agendaItems?.length && (
@@ -347,7 +237,10 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
                                         </span>
                                     ) : (
                                         <span className="flex items-center gap-2">
-                                            <Sparkles /> Generate with AI
+                                            <Sparkles className="fill-current text-blue-500" />
+                                            <span className="">
+                                                Generate with AI
+                                            </span>
                                         </span>
                                     )}
                                 </Button>
@@ -360,7 +253,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
                                     disabled={!form.title || !form.description || isGeneratingContent}
                                     onClick={() => setIsShowDetailItem(true)}
                                 >
-                                    Schedule detail
+                                    Create detail
                                 </Button>
                             </>
                         ) : (

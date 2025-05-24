@@ -141,10 +141,10 @@ export default function Schedule() {
                 ref={textContainerRef}
                 style={{ visibility: "hidden" }}
             >
-                <h4 className="text-lg sm:text-2xl font-normal mb-4">
+                <h4 className="text-lg sm:text-xl font-normal mb-4">
                     The Big Schedule Agenda
                 </h4>
-                <h1 className="text-3xl sm:text-6xl font-light">
+                <h1 className="text-3xl sm:text-5xl font-light">
                     {(isViewMode && agenda?.title) ? agenda.title : 'What schedule would you like to create today?'}
                 </h1>
                 {isViewMode && agenda.description && (
