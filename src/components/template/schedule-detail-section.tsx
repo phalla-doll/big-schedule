@@ -1,6 +1,5 @@
 import { AgendaItem } from "@/lib/global-interface";
 import { Badge } from "@/components/ui/badge";
-import { EllipsisVertical, MoveRight } from "lucide-react";
 import {
     Timeline,
     TimelineItem,
@@ -11,14 +10,8 @@ import {
     TimelineIndicator,
     TimelineContent,
 } from "@/components/ui/timeline";
-import { Button } from "@/components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { useEffect, useState } from "react";
+import { MoveRight } from "lucide-react";
 
 interface ScheduleDetailSectionProps {
     agendaItems: AgendaItem[];
@@ -71,20 +64,8 @@ export default function ScheduleDetailSection({ agendaItems, isInPreviewMode }: 
     return (
         <>
             {!isInPreviewMode && (
-                <div className="flex justify-between gap-2 items-center">
-                    <label className="mb-1.5 text-md">Schedule Detail</label>
-                    <div>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button size="sm" variant="ghost">
-                                    <EllipsisVertical className="h-4 w-4" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                                <DropdownMenuItem>Edit</DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
+                <div className="">
+                    <label className="mb-2 text-md font-medium">Schedule Detail</label>
                 </div>
             )}
             {Object.entries(grouped).map(([date, items]) => (
