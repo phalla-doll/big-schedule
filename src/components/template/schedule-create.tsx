@@ -232,7 +232,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
         ];
 
         const newAgenda: Omit<Agenda, 'id' | 'ownerId' | 'createdAt'> & { agendaItems: AgendaItem[] } = {
-            title: "5 Days Epic Japan Adventure (AI Generated)",
+            title: "5 Days Epic Japan Adventure",
             description: "An AI-crafted itinerary for an unforgettable 5-day journey through the highlights of Japan, focusing on Tokyo and a day trip to Hakone.",
             isPublic: true,
             agendaItems: generatedAgendaItems.map(item => ({

@@ -129,6 +129,11 @@ export default function Schedule() {
         setIsViewMode(true);
     };
 
+    useEffect(() => {
+        // Scroll to top when isViewMode changes
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, [isViewMode]);
+
     return (
         <>
             <div
