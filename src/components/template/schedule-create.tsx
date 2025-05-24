@@ -167,7 +167,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
                     createdAt: new Date().toISOString(),
                 })),
             });
-            setIsShowDetailItem(false);
+            setIsShowDetailItem(true);
         }, 2000);
     };
 

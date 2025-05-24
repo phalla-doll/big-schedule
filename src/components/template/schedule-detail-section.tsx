@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/timeline";
 import { useEffect, useState } from "react";
 import { MoveRight } from "lucide-react";
+import AgendaItemFormDialog from "./agenda-item-form-dialog";
 
 interface ScheduleDetailSectionProps {
     agendaItems: AgendaItem[];
@@ -19,16 +20,23 @@ interface ScheduleDetailSectionProps {
 }
 
 export default function ScheduleDetailSection({ agendaItems, isInPreviewMode }: ScheduleDetailSectionProps) {
-    // Group items by date (YYYY-MM-DD)
     const grouped: Record<string, AgendaItem[]> = {};
-    agendaItems.forEach(item => {
+    const [onShowEditForm, setOnShowEditForm] = useState<boolean>(false);
+    const [activeAgendaItem, setActiveAgendaItem] = useState<AgendaItem>();
+    const [currentAgendaItems, setCurrentAgendaItems] = useState<AgendaItem[]>(agendaItems);
+
+    useEffect(() => {
+        setCurrentAgendaItems(agendaItems);
+    }, [agendaItems]);
+
+
+    currentAgendaItems.forEach(item => {
         const dateStr = (item.startTime || item.endTime || "").split("T")[0] || "No Date";
         if (!grouped[dateStr]) grouped[dateStr] = [];
         grouped[dateStr].push(item);
     });
 
-    // Helper to format date as "Friday, 19 May 2025"
-    function formatDateWithDay(dateStr: string) {
+    const formatDateWithDay = (dateStr: string) => {
         if (dateStr === "No Date") return dateStr;
         const date = new Date(dateStr);
         return date.toLocaleDateString(undefined, {
@@ -39,30 +47,46 @@ export default function ScheduleDetailSection({ agendaItems, isInPreviewMode }: 
         });
     }
 
-    // Track current time, update every minute
     const [now, setNow] = useState<Date>(new Date());
     useEffect(() => {
         const interval = setInterval(() => setNow(new Date()), 60000);
         return () => clearInterval(interval);
     }, []);
 
-    // Helper: check if now is within startTime and endTime
-    function isActiveItem(item: AgendaItem) {
+    const isActiveItem = (item: AgendaItem) => {
         if (!item.startTime || !item.endTime) return false;
         const start = new Date(item.startTime);
         const end = new Date(item.endTime);
         return now >= start && now <= end;
-    }
+    };
 
-    // Helper: check if now is after endTime
-    function isPassedItem(item: AgendaItem) {
+    const isPassedItem = (item: AgendaItem) => {
         if (!item.endTime) return false;
         const end = new Date(item.endTime);
         return now > end;
+    };
+
+    const onEditAgendaItem = (item: AgendaItem) => {
+        setOnShowEditForm(true);
+        setActiveAgendaItem(item);
+    };
+
+    const onSaveAgendaItem = (modifiedAgendaItem: AgendaItem) => {
+        setCurrentAgendaItems(prevItems =>
+            prevItems.map(item =>
+                item.id === modifiedAgendaItem.id ? modifiedAgendaItem : item
+            )
+        );
+        setOnShowEditForm(false);
     }
 
     return (
         <>
+
+            {onShowEditForm && (
+                <AgendaItemFormDialog agendaItem={activeAgendaItem} isOpen={onShowEditForm} onClose={() => setOnShowEditForm(false)} onSave={onSaveAgendaItem} />
+            )}
+
             {!isInPreviewMode && (
                 <div className="">
                     <label className="mb-2 text-md font-medium">Schedule Detail</label>
@@ -85,7 +109,7 @@ export default function ScheduleDetailSection({ agendaItems, isInPreviewMode }: 
                                     step={Number(item.id)}
                                     className="group-data-[orientation=vertical]/timeline:sm:ms-40"
                                 >
-                                    <TimelineHeader>
+                                    <TimelineHeader className={!isInPreviewMode ? "hover:underline hover:cursor-pointer" : ""} onClick={() => onEditAgendaItem(item)}>
                                         <TimelineSeparator
                                             className={((active || passed) ? "bg-green-500" : "")}
                                         />
