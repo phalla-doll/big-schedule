@@ -12,7 +12,7 @@ export function HowItWorksButton() {
         <Popover>
             <PopoverTrigger asChild>
                 <Button variant="ghost" className="text-muted-foreground">
-                    <MessageCircleQuestion className="size-4 mr-2" />
+                    <MessageCircleQuestion className="size-4" />
                     How it works?
                 </Button>
             </PopoverTrigger>
