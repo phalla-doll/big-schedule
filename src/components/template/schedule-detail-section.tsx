@@ -89,8 +89,8 @@ export default function ScheduleDetailSection({ agendaItems, isInPreviewMode }: 
 
             {!isInPreviewMode && (
                 <div>
-                    <h4 className="text-md font-medium">Schedule Detail</h4>
-                    <p className="text-sm text-muted-foreground">To edit, click the item title.</p>
+                    <h4 className="text-md font-medium mb-1">Schedule Detail</h4>
+                    <p className="text-xs text-muted-foreground">To edit, click on the agenda item.</p>
                 </div>
             )}
             {Object.entries(grouped).map(([date, items]) => (
@@ -110,7 +110,7 @@ export default function ScheduleDetailSection({ agendaItems, isInPreviewMode }: 
                                     step={Number(item.id)}
                                     className="group-data-[orientation=vertical]/timeline:sm:ms-40"
                                 >
-                                    <TimelineHeader className={!isInPreviewMode ? "hover:underline hover:cursor-pointer" : ""} onClick={() => onEditAgendaItem(item)}>
+                                    <TimelineHeader className={!isInPreviewMode ? "hover:cursor-pointer" : ""} onClick={() => onEditAgendaItem(item)}>
                                         <TimelineSeparator
                                             className={((active || passed) ? "bg-green-500" : "")}
                                         />
@@ -130,7 +130,7 @@ export default function ScheduleDetailSection({ agendaItems, isInPreviewMode }: 
                                             className={(active ? "border-green-500" : passed ? "bg-green-500" : "")}
                                         />
                                     </TimelineHeader>
-                                    <TimelineContent>
+                                    <TimelineContent onClick={() => onEditAgendaItem(item)} className="hover:cursor-pointer">
                                         {item.description && (
                                             <div className="text-sm text-muted-foreground">{item.description}</div>
                                         )}
