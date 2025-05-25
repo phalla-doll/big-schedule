@@ -1,4 +1,4 @@
-import { AgendaItem } from "@/lib/global-interface";
+import { AgendaItem, User } from "@/lib/global-interface";
 import { Badge } from "@/components/ui/badge";
 import {
     Timeline,
@@ -12,16 +12,20 @@ import {
 } from "@/components/ui/timeline";
 import { useEffect, useState } from "react";
 import { MoveRight } from "lucide-react";
-import AgendaItemFormDialog from "./agenda-item-form-dialog";
+import AgendaItemFormDialog from "@/components/template/agenda-item-form-dialog";
+import AuthorContactInfoDialog from "@/components/template/author-contact-info-dialog";
+import { Button } from "@/components/ui/button";
 
 interface ScheduleDetailSectionProps {
     agendaItems: AgendaItem[];
     isInPreviewMode: boolean;
+    author?: User;
 }
 
-export default function ScheduleDetailSection({ agendaItems, isInPreviewMode }: ScheduleDetailSectionProps) {
+export default function ScheduleDetailSection({ agendaItems, isInPreviewMode, author }: ScheduleDetailSectionProps) {
     const grouped: Record<string, AgendaItem[]> = {};
     const [onShowEditForm, setOnShowEditForm] = useState<boolean>(false);
+    const [onShowAuthorDialog, setOnShowAuthorDialog] = useState<boolean>(false);
     const [activeAgendaItem, setActiveAgendaItem] = useState<AgendaItem>();
     const [currentAgendaItems, setCurrentAgendaItems] = useState<AgendaItem[]>(agendaItems);
 
@@ -87,10 +91,22 @@ export default function ScheduleDetailSection({ agendaItems, isInPreviewMode }: 
                 <AgendaItemFormDialog agendaItem={activeAgendaItem} isOpen={onShowEditForm} onClose={() => setOnShowEditForm(false)} onSave={onSaveAgendaItem} />
             )}
 
+            {onShowAuthorDialog && (
+                <AuthorContactInfoDialog onClose={() => setOnShowAuthorDialog(false)} author={author} isOpen={onShowAuthorDialog} />
+            )}
+
             {!isInPreviewMode && (
-                <div>
-                    <h4 className="text-md font-medium mb-1">Schedule Detail</h4>
-                    <p className="text-xs text-muted-foreground">To edit, click on the agenda item.</p>
+                <div className="flex justify-between items-center">
+                    <div>
+                        <h4 className="text-md font-medium mb-0.5">Schedule Detail</h4>
+                        <p className="text-xs text-muted-foreground">To edit, click on the agenda item.</p>
+                    </div>
+                    <Button
+                        variant="ghost"
+                        onClick={() => setOnShowAuthorDialog(true)}
+                    >
+                        Add contact info
+                    </Button>
                 </div>
             )}
             {Object.entries(grouped).map(([date, items]) => (

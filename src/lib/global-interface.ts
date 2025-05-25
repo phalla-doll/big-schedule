@@ -4,10 +4,12 @@ export type Permission = 'view' | 'edit' | 'manage';
 export interface User {
   id: string;
   name: string;
-  email: string;
-  passwordHash: string;
+  email?: string;
+  passwordHash?: string;
   role: 'admin' | 'user';
-  createdAt: string;
+  createdAt?: string;
+  phone?: string;
+  telegramId?: string;
 }
 
 export interface Agenda {
@@ -18,6 +20,7 @@ export interface Agenda {
   isPublic: boolean;
   createdAt: string;
   agendaItems?: AgendaItem[];
+  author?: User;
 }
 
 export interface AgendaItem {
