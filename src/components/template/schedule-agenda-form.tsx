@@ -28,7 +28,7 @@ export default function ScheduleForm({ form, handleChange, setForm }: ScheduleFo
     return (
         <form className="flex flex-col gap-4">
             <div>
-                <Label htmlFor="agenda-title" className="mb-1.5">Title</Label>
+                <Label htmlFor="agenda-title" className="mb-1.5 text-sm text-muted-foreground">Title</Label>
                 <Input
                     id="agenda-title"
                     name="title"
@@ -39,7 +39,7 @@ export default function ScheduleForm({ form, handleChange, setForm }: ScheduleFo
                 />
             </div>
             <div>
-                <Label htmlFor="agenda-description" className="mb-1.5">Description</Label>
+                <Label htmlFor="agenda-description" className="mb-1.5 text-sm text-muted-foreground">Description</Label>
                 <Textarea
                     id="agenda-description"
                     name="description"

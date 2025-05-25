@@ -88,8 +88,9 @@ export default function ScheduleDetailSection({ agendaItems, isInPreviewMode }: 
             )}
 
             {!isInPreviewMode && (
-                <div className="">
-                    <label className="mb-2 text-md font-medium">Schedule Detail</label>
+                <div>
+                    <h4 className="text-md font-medium">Schedule Detail</h4>
+                    <p className="text-sm text-muted-foreground">To edit, click the item title.</p>
                 </div>
             )}
             {Object.entries(grouped).map(([date, items]) => (

@@ -47,7 +47,7 @@ export default function AgendaItemFormDialog({ isOpen, onClose, agendaItem, onSa
                     <Input name="startTime" type="datetime-local" value={form.startTime} onChange={handleChange} required />
                     <Input name="endTime" type="datetime-local" value={form.endTime} onChange={handleChange} required />
                     <Input name="location" value={form.location} onChange={handleChange} placeholder="Location" />
-                    <DialogFooter>
+                    <DialogFooter className="mt-4">
                         <Button variant="outline" onClick={onClose}>Cancel</Button>
                         <Button type="submit" variant="default">Save changes</Button>
                     </DialogFooter>
