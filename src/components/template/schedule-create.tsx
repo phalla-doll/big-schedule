@@ -5,7 +5,7 @@ import { BorderBeam } from "@/components/magicui/border-beam";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { useState, useEffect } from "react";
-import { Agenda, AgendaItem, User } from "@/lib/global-interface";
+import { Agenda, AgendaItem } from "@/lib/global-interface";
 import { Separator } from "@/components/ui/separator";
 import ScheduleDetailSection from "@/components/template/schedule-detail-section";
 import ScheduleForm from "./schedule-agenda-form";
@@ -37,6 +37,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
         endTime: "",
         location: "",
     });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const user = useSupabaseUser();
 
     // Sync agenda state with agendaFromParent if it changes
@@ -176,10 +177,6 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
             console.log("Generated agenda items:", newAgenda);
         }, 2000);
     };
-
-    if (!user) {
-        return <div>Please log in.</div>;
-    }
 
     return (
         <>
