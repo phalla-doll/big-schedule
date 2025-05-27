@@ -128,7 +128,7 @@ export default function Schedule() {
 
     const handleAgenda = (agenda: Agenda) => {
         setAgenda({...agenda, author: defaultUser}); // Set a default author for the agenda
-        setIsViewMode(true);        
+        setIsViewMode(true);
     };
 
     useEffect(() => {

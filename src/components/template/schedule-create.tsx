@@ -5,7 +5,7 @@ import { BorderBeam } from "@/components/magicui/border-beam";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { useState, useEffect } from "react";
-import { Agenda, AgendaItem } from "@/lib/global-interface";
+import { Agenda, AgendaItem, User } from "@/lib/global-interface";
 import { Separator } from "@/components/ui/separator";
 import ScheduleDetailSection from "@/components/template/schedule-detail-section";
 import ScheduleForm from "./schedule-agenda-form";
@@ -13,7 +13,7 @@ import AgendaDetailForm from "@/components/template/agenda-detail-form";
 import { generatedAgendaItems } from "@/components/template/generated-agenda-items";
 import { HowItWorksButton } from "@/components/template/how-it-works-button";
 import { defaultUser } from "@/lib/utils";
-import LoginButton from "./login-button";
+import { useSupabaseUser } from "@/lib/supabase";
 
 export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPreview?: (agenda: Agenda) => void, agendaFromParent: Agenda | undefined; }) {
     const [agenda, setAgenda] = useState<Agenda | undefined>(agendaFromParent);
@@ -37,6 +37,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
         endTime: "",
         location: "",
     });
+    const user = useSupabaseUser();
 
     // Sync agenda state with agendaFromParent if it changes
     useEffect(() => {
@@ -175,6 +176,10 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
             console.log("Generated agenda items:", newAgenda);
         }, 2000);
     };
+
+    if (!user) {
+        return <div>Please log in.</div>;
+    }
 
     return (
         <>
