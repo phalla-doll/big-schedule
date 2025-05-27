@@ -13,7 +13,8 @@ import AgendaDetailForm from "@/components/template/agenda-detail-form";
 import { generatedAgendaItems } from "@/components/template/generated-agenda-items";
 import { HowItWorksButton } from "@/components/template/how-it-works-button";
 import { defaultUser } from "@/lib/utils";
-import { useSupabaseUser } from "@/lib/supabase";
+import { toast } from "sonner";
+import { useSupabaseUser } from "@/components/template/supabase-user";
 
 export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPreview?: (agenda: Agenda) => void, agendaFromParent: Agenda | undefined; }) {
     const [agenda, setAgenda] = useState<Agenda | undefined>(agendaFromParent);
@@ -37,7 +38,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
         endTime: "",
         location: "",
     });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [isSaving, setIsSaving] = useState(false);
     const user = useSupabaseUser();
 
     // Sync agenda state with agendaFromParent if it changes
@@ -113,27 +114,52 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
         });
     };
 
-    function handleSaveSchedule(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    async function handleSaveSchedule(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> {
         event.preventDefault();
-        // Simulate saving the schedule (could be an API call)
-        setAgenda(prev => {
-            if (prev) {
-                return {
-                    ...prev,
-                    ...form,
-                    agendaItems: prev.agendaItems ?? [],
-                };
-            } else {
-                // Provide default values for required fields
-                return {
-                    id: "",
-                    ownerId: "",
-                    createdAt: new Date().toISOString(),
-                    ...form,
-                    agendaItems: [],
-                };
+        console.log('current user: ', user);
+        if (!user) {
+            toast("You must be logged in to save a schedule.");
+            return;
+        }
+        setIsSaving(true);
+        try {
+            // Prepare agenda payload (no agendaItems)
+            const payload = {
+                id: agenda?.id || undefined,
+                title: form.title,
+                description: form.description,
+                ownerId: user.id,
+                isPublic: form.isPublic,
+                createdAt: agenda?.createdAt || new Date().toISOString(),
+                agendaItems: agenda?.agendaItems || [],
+            };
+            console.log('payload', payload);
+
+            const res = await fetch("/api/agendas", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+            const data = await res.json();
+            console.log('response data', data);
+
+            if (!res.ok) {
+                toast.error(data.error || "Failed to save agenda");
+                throw new Error(data.error || "Failed to save agenda");
             }
-        });
+
+            // Update agenda state with response (keep agendaItems)
+            setAgenda({
+                ...data,
+                agendaItems: data.agendaItems || [],
+                author: user,
+            });
+            toast.success("Agenda published successfully");
+        } catch (err: any) {
+            toast.error(err.message || "Failed to save agenda");
+        } finally {
+            setIsSaving(false);
+        }
     }
 
     const handleGenerateWithAI = (): void => {
@@ -268,8 +294,16 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
                                 size="default"
                                 className="w-1/2 sm:w-auto"
                                 onClick={handleSaveSchedule}
+                                disabled={isSaving}
                             >
-                                {!agenda?.id ? 'Publish' : 'Save schedule'}
+                                {isSaving ? (
+                                    <span className="flex items-center gap-2">
+                                        <Loader2 className="animate-spin" />
+                                        Publishing...
+                                    </span>
+                                ) : (
+                                    !agenda?.id ? 'Publish' : 'Save schedule'
+                                )}
                             </Button>
                         )}
                     </div>

@@ -13,7 +13,7 @@ export interface User {
 }
 
 export interface Agenda {
-  id: string;
+  id?: string;
   title: string;
   description?: string;
   ownerId: string;
