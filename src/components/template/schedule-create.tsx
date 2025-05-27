@@ -13,6 +13,7 @@ import AgendaDetailForm from "@/components/template/agenda-detail-form";
 import { generatedAgendaItems } from "@/components/template/generated-agenda-items";
 import { HowItWorksButton } from "@/components/template/how-it-works-button";
 import { defaultUser } from "@/lib/utils";
+import LoginButton from "./login-button";
 
 export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPreview?: (agenda: Agenda) => void, agendaFromParent: Agenda | undefined; }) {
     const [agenda, setAgenda] = useState<Agenda | undefined>(agendaFromParent);
