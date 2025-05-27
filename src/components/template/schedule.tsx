@@ -6,6 +6,7 @@ import SchedulePublicView from "@/components/template/schedule-public-view";
 import { Agenda } from "@/lib/global-interface";
 import { animate, stagger, AnimatePresence, motion } from "framer-motion";
 import Lenis from "@studio-freight/lenis";
+import { defaultUser } from "@/lib/utils";
 
 function customSplitText(
     element: HTMLElement,
@@ -36,6 +37,7 @@ function customSplitText(
 
     return { words: wordElements };
 }
+
 
 export default function Schedule() {
 
@@ -118,15 +120,15 @@ export default function Schedule() {
     }, []);
 
     const [isViewMode, setIsViewMode] = useState(false);
-    const [agenda, setAgenda] = useState<Agenda>({} as Agenda);
+    const [agenda, setAgenda] = useState<Agenda>({author: defaultUser} as Agenda);
 
     const handleToggleViewMode = () => {
         setIsViewMode(!isViewMode);
     };
 
     const handleAgenda = (agenda: Agenda) => {
-        setAgenda(agenda);
-        setIsViewMode(true);
+        setAgenda({...agenda, author: defaultUser}); // Set a default author for the agenda
+        setIsViewMode(true);        
     };
 
     useEffect(() => {

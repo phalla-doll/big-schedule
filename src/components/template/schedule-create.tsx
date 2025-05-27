@@ -12,6 +12,7 @@ import ScheduleForm from "./schedule-agenda-form";
 import AgendaDetailForm from "@/components/template/agenda-detail-form";
 import { generatedAgendaItems } from "@/components/template/generated-agenda-items";
 import { HowItWorksButton } from "@/components/template/how-it-works-button";
+import { defaultUser } from "@/lib/utils";
 
 export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPreview?: (agenda: Agenda) => void, agendaFromParent: Agenda | undefined; }) {
     const [agenda, setAgenda] = useState<Agenda | undefined>(agendaFromParent);
@@ -92,6 +93,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
                     description: form.description,
                     isPublic: form.isPublic,
                     agendaItems: [],
+                    author: defaultUser, // Set the author to the temporary user
                 }),
                 agendaItems: [
                     ...(prev?.agendaItems || []),
@@ -166,8 +168,10 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
                     agendaId: "", // Will be set on save
                     createdAt: new Date().toISOString(),
                 })),
+                author: defaultUser, // Set the author to the temporary user
             });
             setIsShowDetailItem(true);
+            console.log("Generated agenda items:", newAgenda);
         }, 2000);
     };
 
