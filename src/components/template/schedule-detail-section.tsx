@@ -92,7 +92,7 @@ export default function ScheduleDetailSection({ agendaItems, isInPreviewMode, au
             )}
 
             {onShowAuthorDialog && (
-                <AuthorContactInfoDialog onClose={() => setOnShowAuthorDialog(false)} author={author} isOpen={onShowAuthorDialog} />
+                <AuthorContactInfoDialog onClose={() => setOnShowAuthorDialog(false)} author={author || undefined} isOpen={onShowAuthorDialog} />
             )}
 
             {!isInPreviewMode && (

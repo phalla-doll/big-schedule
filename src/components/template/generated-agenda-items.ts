@@ -3,8 +3,8 @@ import moment from "moment";
 
 export function generatedAgendaItems(
     tripStartDate: Date,
-    generatedAgendaId: string,
-    now: string
+    now: string,
+    generatedAgendaId?: string,
 ): AgendaItem[] {
     // Use moment for date manipulation
     const base = moment(tripStartDate);
@@ -169,8 +169,8 @@ export function generatedAgendaItems(
     const agendaItems = items.map((item) => {
         return {
             ...item,
-            id: crypto.randomUUID(),
-            agendaId: generatedAgendaId,
+            id: "",
+            agendaId: generatedAgendaId || "",
             createdAt: now,
         };
     });

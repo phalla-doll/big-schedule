@@ -4,6 +4,7 @@ import { User } from "@/lib/global-interface";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { defaultUser } from '@/lib/utils';
 
 interface AuthorContactInfoDialogProps {
     isOpen: boolean;
@@ -13,25 +14,13 @@ interface AuthorContactInfoDialogProps {
 }
 
 export default function AuthorContactInfoDialog({ isOpen, onClose, author, onSave }: AuthorContactInfoDialogProps) {
-    const [formData, setFormData] = useState<User>({
-        name: '',
-        email: '',
-        phone: '',
-        id: '',
-        role: 'user',
-    });
+    const [formData, setFormData] = useState<User>(author || defaultUser);
 
     useEffect(() => {
         if (isOpen) {
-            setFormData({
-                name: author?.name || '',
-                email: author?.email || '',
-                phone: author?.phone || '',
-                id: author?.id || '',
-                role: author?.role || 'user',
-            });
+            setFormData(author || defaultUser);
         }
-    }, [author, isOpen]);
+    }, [isOpen, author]);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -60,8 +49,8 @@ export default function AuthorContactInfoDialog({ isOpen, onClose, author, onSav
                     A contact information of the agenda owner. If viewers want to get in touch with the owner.
                 </DialogDescription>
                 <form onSubmit={handleSubmit}>
-                    <div className="grid gap-4 my-4"> {/* Added my-4 for spacing, original was mb-4 */}
-                        <div className="">
+                    <div className="grid gap-2 my-4"> {/* Added my-4 for spacing, original was mb-4 */}
+                        <div>
                             <Label htmlFor="name" className="mb-1.5 text-sm text-muted-foreground">
                                 Name
                             </Label>
@@ -72,7 +61,7 @@ export default function AuthorContactInfoDialog({ isOpen, onClose, author, onSav
                                 className="col-span-3"
                             />
                         </div>
-                        <div className="">
+                        <div>
                             <Label htmlFor="email" className="mb-1.5 text-sm text-muted-foreground">
                                 Email
                             </Label>
@@ -84,7 +73,7 @@ export default function AuthorContactInfoDialog({ isOpen, onClose, author, onSav
                                 className="col-span-3"
                             />
                         </div>
-                        <div className="">
+                        <div>
                             <Label htmlFor="phone" className="mb-1.5 text-sm text-muted-foreground">
                                 Phone
                             </Label>

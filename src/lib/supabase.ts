@@ -18,7 +18,6 @@ export const createServerClient = () => {
 }
 
 export function useSupabaseUser() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {

@@ -137,7 +137,6 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
     }
 
     const handleGenerateWithAI = (): void => {
-        const generatedAgendaId = crypto.randomUUID(); // This can be used if you decide to link items before saving
         const now = new Date().toISOString();
         const currentDate = new Date();
         const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
@@ -148,7 +147,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
             title: "3 Days Epic Japan Adventure",
             description: "An AI-crafted itinerary for an unforgettable 3-day journey through the highlights of Japan, focusing on Tokyo and a day trip to Hakone.",
             isPublic: true,
-            agendaItems: generatedAgendaItems(tripStartDate, generatedAgendaId, now),
+            agendaItems: generatedAgendaItems(tripStartDate, now, agenda?.id || undefined),
         };
 
         setTimeout(() => {
@@ -191,7 +190,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
                         <>
                             <Separator className="my-5" />
                             <div className="mt-5">
-                                <ScheduleDetailSection agendaItems={agenda.agendaItems} isInPreviewMode={false} />
+                                <ScheduleDetailSection agendaItems={agenda.agendaItems} isInPreviewMode={false} author={user || undefined} />
                             </div>
                         </>
                     )}
@@ -276,15 +275,15 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
                     </div>
                 </CardFooter>
                 <BorderBeam
-                    duration={6}
+                    duration={9}
                     size={400}
-                    className="from-transparent via-red-500 to-transparent"
+                    className="from-transparent via-purple-500 to-transparent"
                 />
                 <BorderBeam
-                    duration={6}
+                    duration={9}
                     delay={3}
                     size={400}
-                    className="from-transparent via-blue-500 to-transparent"
+                    className="from-transparent via-teal-500 to-transparent"
                 />
             </Card>
         </>
