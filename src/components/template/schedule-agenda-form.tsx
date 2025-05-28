@@ -22,30 +22,33 @@ type ScheduleFormProps = {
         agendaItems: Partial<AgendaItem>[];
         [key: string]: unknown;
     }>>;
+    readOnly?: boolean;
 };
 
-export default function ScheduleForm({ form, handleChange, setForm }: ScheduleFormProps) {
+export default function ScheduleForm({ form, handleChange, setForm, readOnly }: ScheduleFormProps) {
     return (
         <form className="flex flex-col gap-4">
             <div>
-                <Label htmlFor="agenda-title" className="mb-1.5 text-sm text-muted-foreground">Title</Label>
+                <Label htmlFor="agenda-title" className="mb-1.5 text-sm text-muted-foreground">What kind of schedule are you planning?</Label>
                 <Input
                     id="agenda-title"
                     name="title"
                     type="text"
-                    placeholder="Enter agenda title"
+                    placeholder="Enter schedule title"
                     value={form.title}
                     onChange={handleChange}
+                    readOnly={readOnly}
                 />
             </div>
             <div>
-                <Label htmlFor="agenda-description" className="mb-1.5 text-sm text-muted-foreground">Description</Label>
+                <Label htmlFor="agenda-description" className="mb-1.5 text-x text-muted-foreground">Purpose of this schedule</Label>
                 <Textarea
                     id="agenda-description"
                     name="description"
-                    placeholder="Enter agenda description"
+                    placeholder="Enter schedule description, how many days, and your interest"
                     value={form.description}
                     onChange={handleChange}
+                    readOnly={readOnly}
                 />
             </div>
             <div className="flex items-center gap-2">
@@ -54,6 +57,7 @@ export default function ScheduleForm({ form, handleChange, setForm }: ScheduleFo
                     name="isPublic"
                     checked={form.isPublic}
                     onCheckedChange={checked => setForm(f => ({ ...f, isPublic: !!checked }))}
+                    disabled={readOnly}
                 />
                 <Label htmlFor="agenda-public" className="text-sm">
                     Public{" "}

@@ -210,10 +210,34 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
         try {
             const result = await generateText(computedPrompt);
             console.log('result => ', result);
-            setForm(prev => ({
-                ...prev,
-                description: result,
-            }));
+            if (result.title && result.description) {
+                setForm(prev => ({
+                    ...prev,
+                    title: result.title,
+                    description: result.description,
+                }));
+            }
+            if (result.agendaItems || result.agendaItem) {
+                setAgenda(prev => ({
+                    ...(prev || {
+                        id: "",
+                        ownerId: "",
+                        createdAt: new Date().toISOString(),
+                        title: form.title,
+                        description: form.description,
+                        isPublic: form.isPublic,
+                        agendaItems: [],
+                        author: defaultUser,
+                    }),
+                    agendaItems: result.agendaItems.map((item: any) => ({
+                        ...item,
+                        id: `fake_${crypto.randomUUID()}`,
+                        agendaId: agenda?.id ?? "",
+                        createdAt: new Date().toISOString(),
+                    })),
+                }));
+                setIsShowDetailItem(true);
+            }
             toast.success("AI content generated!");
         } catch (error) {
             toast.error("Failed to generate content.");
@@ -248,10 +272,9 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
             <Card className="relative w-full sm:w-3xl overflow-hidden">
                 <CardHeader>
                     <CardTitle>Create New Schedule</CardTitle>
-                    <CardDescription>Fill in the details below.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <ScheduleForm form={form} handleChange={handleChange} setForm={setForm} />
+                    <ScheduleForm form={form} handleChange={handleChange} setForm={setForm} readOnly={isGeneratingContent} />
                     {agenda?.agendaItems?.length && (
                         <>
                             <Separator className="my-5" />
