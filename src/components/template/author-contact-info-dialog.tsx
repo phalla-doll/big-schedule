@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
 import { User } from "@/lib/global-interface";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ export default function AuthorContactInfoDialog({ isOpen, onClose, author, onSav
         }
     }, [isOpen, author]);
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
         const { id, value } = e.target;
         setFormData(prevFormData => ({
             ...prevFormData,

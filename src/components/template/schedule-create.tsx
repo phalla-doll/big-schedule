@@ -10,7 +10,6 @@ import { Separator } from "@/components/ui/separator";
 import ScheduleDetailSection from "@/components/template/schedule-detail-section";
 import ScheduleForm from "./schedule-agenda-form";
 import AgendaDetailForm from "@/components/template/agenda-detail-form";
-import { generatedAgendaItems } from "@/components/template/generated-agenda-items";
 import { HowItWorksButton } from "@/components/template/how-it-works-button";
 import { defaultUser } from "@/lib/utils";
 import { toast } from "sonner";
@@ -164,46 +163,84 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
         }
     }
 
-    const handleGenerateWithAI = (): void => {
-        const now = new Date().toISOString();
-        const currentDate = new Date();
-        const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
-        const tripStartDate = nextMonth;
+    // const handleGenerateWithAI = (): void => {
+    //     const now = new Date().toISOString();
+    //     const currentDate = new Date();
+    //     const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+    //     const tripStartDate = nextMonth;
+    //     setIsGeneratingContent(true);
+
+    //     const newAgenda: Omit<Agenda, 'id' | 'ownerId' | 'createdAt'> & { agendaItems: AgendaItem[] } = {
+    //         title: "3 Days Epic Japan Adventure",
+    //         description: "An AI-crafted itinerary for an unforgettable 3-day journey through the highlights of Japan, focusing on Tokyo and a day trip to Hakone.",
+    //         isPublic: true,
+    //         agendaItems: generatedAgendaItems(tripStartDate, now, agenda?.id || undefined),
+    //     };
+
+    //     setTimeout(() => {
+    //         setForm(prev => ({
+    //             ...prev,
+    //             title: newAgenda.title,
+    //             description: newAgenda.description ?? "",
+    //             isPublic: newAgenda.isPublic,
+    //         }));
+    //         setAgenda({
+    //             id: "", // No ID for a new, unsaved agenda
+    //             ownerId: "", // No ownerId yet
+    //             createdAt: "", // No createdAt yet
+    //             title: newAgenda.title,
+    //             description: newAgenda.description,
+    //             isPublic: newAgenda.isPublic,
+    //             agendaItems: newAgenda.agendaItems.map(item => ({
+    //                 ...item,
+    //                 id: crypto.randomUUID(),
+    //                 agendaId: "", // Will be set on save
+    //                 createdAt: new Date().toISOString(),
+    //             })),
+    //             author: defaultUser, // Set the author to the temporary user
+    //         });
+    //         setIsShowDetailItem(true);
+    //         console.log("Generated agenda items:", newAgenda);
+    //     }, 2000);
+    // };
+
+    const handleAiGeneration = async () => {
         setIsGeneratingContent(true);
-
-        const newAgenda: Omit<Agenda, 'id' | 'ownerId' | 'createdAt'> & { agendaItems: AgendaItem[] } = {
-            title: "3 Days Epic Japan Adventure",
-            description: "An AI-crafted itinerary for an unforgettable 3-day journey through the highlights of Japan, focusing on Tokyo and a day trip to Hakone.",
-            isPublic: true,
-            agendaItems: generatedAgendaItems(tripStartDate, now, agenda?.id || undefined),
-        };
-
-        setTimeout(() => {
+        const computedPrompt = `Create a detailed schedule for a ${form.title}, focusing on ${form.description}.`;
+        try {
+            const result = await generateText(computedPrompt);
+            console.log('result => ', result);
             setForm(prev => ({
                 ...prev,
-                title: newAgenda.title,
-                description: newAgenda.description ?? "",
-                isPublic: newAgenda.isPublic,
+                description: result,
             }));
-            setAgenda({
-                id: "", // No ID for a new, unsaved agenda
-                ownerId: "", // No ownerId yet
-                createdAt: "", // No createdAt yet
-                title: newAgenda.title,
-                description: newAgenda.description,
-                isPublic: newAgenda.isPublic,
-                agendaItems: newAgenda.agendaItems.map(item => ({
-                    ...item,
-                    id: crypto.randomUUID(),
-                    agendaId: "", // Will be set on save
-                    createdAt: new Date().toISOString(),
-                })),
-                author: defaultUser, // Set the author to the temporary user
-            });
-            setIsShowDetailItem(true);
-            console.log("Generated agenda items:", newAgenda);
-        }, 2000);
+            toast.success("AI content generated!");
+        } catch (error) {
+            toast.error("Failed to generate content.");
+            console.error(error);
+        } finally {
+            setIsGeneratingContent(false);
+        }
     };
+
+    async function generateText(prompt: string) {
+        try {
+            const res = await fetch('/api/openai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt }),
+            });
+
+            if (!res.ok) {
+                throw new Error("API error");
+            }
+
+            const data = await res.json();
+            return data.result;
+        } catch (error) {
+            throw error;
+        }
+    }
 
     return (
         <>
@@ -260,8 +297,8 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
                                     variant="secondary"
                                     size="default"
                                     className="w-1/2 sm:w-auto"
-                                    disabled={form.title !== '' || isGeneratingContent}
-                                    onClick={handleGenerateWithAI}
+                                    disabled={isGeneratingContent || !form.title || !form.description}
+                                    onClick={handleAiGeneration}
                                     type="button"
                                     area-label="Generate with AI"
                                 >
