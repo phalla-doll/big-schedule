@@ -15,10 +15,12 @@ import { HowItWorksButton } from "@/components/template/how-it-works-button";
 import { defaultUser } from "@/lib/utils";
 import { toast } from "sonner";
 import { useSupabaseUser } from "@/components/template/supabase-user";
+import LoginDialog from "@/components/template/login-dialog";
 
 export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPreview?: (agenda: Agenda) => void, agendaFromParent: Agenda | undefined; }) {
     const [agenda, setAgenda] = useState<Agenda | undefined>(agendaFromParent);
     const [isShowDetailItem, setIsShowDetailItem] = useState(false);
+    const [isShowLoginDialog, setIsShowLoginDialog] = useState(false);
     const [isGeneratingContent, setIsGeneratingContent] = useState(false);
     const [form, setForm] = useState<{
         title: string;
@@ -118,7 +120,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
         event.preventDefault();
         console.log('current user: ', user);
         if (!user) {
-            toast("You must be logged in to save a schedule.");
+            setIsShowLoginDialog(true);
             return;
         }
         setIsSaving(true);
@@ -205,6 +207,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
 
     return (
         <>
+            {isShowLoginDialog && <LoginDialog onClose={() => setIsShowLoginDialog(false)} />}
             <Card className="relative w-full sm:w-3xl overflow-hidden">
                 <CardHeader>
                     <CardTitle>Create New Schedule</CardTitle>

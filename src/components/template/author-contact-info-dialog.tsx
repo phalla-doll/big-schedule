@@ -43,7 +43,7 @@ export default function AuthorContactInfoDialog({ isOpen, onClose, author, onSav
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent>
+            <DialogContent className="sm:max-w-[425px]">
                 <DialogTitle>Agenda Owner Contact Information</DialogTitle>
                 <DialogDescription>
                     A contact information of the agenda owner. If viewers want to get in touch with the owner.

@@ -7,6 +7,7 @@ import { Agenda } from "@/lib/global-interface";
 import { animate, stagger, AnimatePresence, motion } from "framer-motion";
 import Lenis from "@studio-freight/lenis";
 import { defaultUser } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
 
 function customSplitText(
     element: HTMLElement,
@@ -120,14 +121,14 @@ export default function Schedule() {
     }, []);
 
     const [isViewMode, setIsViewMode] = useState(false);
-    const [agenda, setAgenda] = useState<Agenda>({author: defaultUser} as Agenda);
+    const [agenda, setAgenda] = useState<Agenda>({ author: defaultUser } as Agenda);
 
     const handleToggleViewMode = () => {
         setIsViewMode(!isViewMode);
     };
 
     const handleAgenda = (agenda: Agenda) => {
-        setAgenda({...agenda, author: defaultUser}); // Set a default author for the agenda
+        setAgenda({ ...agenda, author: defaultUser }); // Set a default author for the agenda
         setIsViewMode(true);
     };
 
@@ -135,6 +136,15 @@ export default function Schedule() {
         // Scroll to top when isViewMode changes
         window.scrollTo({ top: 0, behavior: "smooth" });
     }, [isViewMode]);
+
+    // Example: in a useEffect after redirect
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                console.log("User session:", session);
+            }
+        });
+    }, []);
 
     return (
         <>
