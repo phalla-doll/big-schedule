@@ -16,13 +16,13 @@ export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
         const { prompt } = body;
+        const dateNow = new Date().toISOString();
         const JsonStructuredPrompt =
         `Please generate the following information and respond in JSON format with the following structure:
         {
             "title": "...",
             "description": "...",
-            "agendaItems":
-            [
+            "agendaItems": [
                 {
                     "title": "...",
                     "description": "...",
@@ -33,11 +33,17 @@ export async function POST(req: NextRequest) {
                 ...
             ],
         }
-        Based on the following input: ${prompt}.
-        Result should be in medium length.
-        startTime and endTime should be in the format of ISO 8601.
-        If there is no date or time mentioned, use the current date and time.
-        Please make sure to not change the property name in JSON structure.`;
+        Based on the following input: "${prompt}".
+
+        ### Instructions ###
+        - Result should be in medium length.
+        - startTime and endTime should be in the format of ISO 8601.
+        - In a day should have at least a few agendaItems (few activities).
+        - If there is no date or time mentioned, the current date and time is ${dateNow}.
+        - Please make sure to not change the property name in JSON structure.
+        - If there is no location mentioned, use "Online" as the default location.
+        - Don't include any additional text or explanations, just return the JSON object.
+        `;
 
         const completion = await openai.chat.completions.create({
             model: "deepseek/deepseek-chat-v3-0324:free", // Or use another text model
