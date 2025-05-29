@@ -59,7 +59,6 @@ ${userInput}
 - startTime must be before endTime
 - Each item duration: 15 minutes to 4 hours
 - No overlapping time slots
-- All dates within next 365 days
 - No skipping of time slots or the target day
 
 Return only the JSON object, no additional text.`;
