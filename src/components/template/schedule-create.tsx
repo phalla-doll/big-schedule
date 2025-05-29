@@ -218,6 +218,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
                 }));
             }
             if (result.agendaItems || result.agendaItem) {
+                const items = result.agendaItems || result.agendaItem || [];
                 setAgenda(prev => ({
                     ...(prev || {
                         id: "",
@@ -229,7 +230,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
                         agendaItems: [],
                         author: defaultUser,
                     }),
-                    agendaItems: result.agendaItems.map((item: any) => ({
+                    agendaItems: items?.map((item: any) => ({
                         ...item,
                         id: `fake_${crypto.randomUUID()}`,
                         agendaId: agenda?.id ?? "",
@@ -237,6 +238,10 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
                     })),
                 }));
                 setIsShowDetailItem(true);
+            } else {
+                toast.error("No agenda items generated. Please try again.");
+                console.error("No agenda items generated:", result);
+                return;
             }
             toast.success("AI content generated!");
         } catch (error) {
