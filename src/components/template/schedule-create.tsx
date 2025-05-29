@@ -99,6 +99,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
                     isPublic: form.isPublic,
                     agendaItems: [],
                     author: defaultUser, // Set the author to the temporary user
+                    slug: "", // Optional slug for URL-friendly identification
                 }),
                 agendaItems: [
                     ...(prev?.agendaItems || []),
@@ -133,6 +134,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
                 isPublic: form.isPublic,
                 createdAt: agenda?.createdAt || new Date().toISOString(),
                 agendaItems: agenda?.agendaItems || [],
+                slug: agenda?.slug || "",
             };
             console.log('payload', payload);
 
@@ -229,6 +231,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
                         isPublic: form.isPublic,
                         agendaItems: [],
                         author: defaultUser,
+                        slug: "", // Optional slug for URL-friendly identification
                     }),
                     agendaItems: items?.map((item: any) => ({
                         ...item,

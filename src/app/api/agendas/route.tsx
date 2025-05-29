@@ -7,20 +7,19 @@ import {
 } from '@/lib/database-helpers';
 import { Agenda, AgendaItem } from '@/lib/global-interface';
 
-// GET: Fetch agendas (all visible or by id)
+// GET: Fetch agendas (all visible or by slug)
 export async function GET(req: NextRequest) {
     const supabase = createServerClient();
     const { searchParams } = new URL(req.url);
-    const id = searchParams.get('id');
+    const slugString = searchParams.get('slug');
 
-    if (id) {
+    if (slugString) {
         // Fetch single agenda by id
         const { data, error } = await supabase
             .from('agendas')
-            .select('*')
-            .eq('id', id)
+            .select('*, agenda_items(*)')
+            .eq('slug', slugString)
             .single();
-
         if (error) {
             return NextResponse.json({ error: error.message }, { status: 404 });
         }
@@ -57,6 +56,7 @@ export async function PUT(req: NextRequest) {
         isPublic: agenda.isPublic || false,
         title: agenda.title,
         description: agenda.description || undefined,
+        slug: agenda.slug || ''
     });
 
     // 1. Upsert agenda

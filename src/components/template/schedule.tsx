@@ -1,54 +1,22 @@
 "use client";
 
 import ScheduleCreate from "@/components/template/schedule-create";
-import { useState, useEffect, useRef } from "react";
+import {useState, useEffect} from "react";
 import SchedulePublicView from "@/components/template/schedule-public-view";
-import { Agenda } from "@/lib/global-interface";
-import { animate, stagger, AnimatePresence, motion } from "framer-motion";
+import {Agenda} from "@/lib/global-interface";
+import {AnimatePresence, motion} from "framer-motion";
 import Lenis from "@studio-freight/lenis";
-import { defaultUser } from "@/lib/utils";
-import { supabase } from "@/lib/supabase";
-
-function customSplitText(
-    element: HTMLElement,
-    options?: { wordFormat?: (wordElement: HTMLElement) => void }
-): { words: HTMLElement[] } {
-    if (!element.textContent) {
-        return { words: [] };
-    }
-    const text = element.textContent.trim();
-    const wordsArray = text.split(/\s+/).filter((word) => word.length > 0);
-    const wordElements: HTMLElement[] = [];
-
-    element.innerHTML = "";
-
-    wordsArray.forEach((wordStr, index) => {
-        const wordSpan = document.createElement("span");
-        wordSpan.textContent = wordStr;
-        if (options?.wordFormat) {
-            options.wordFormat(wordSpan);
-        }
-        element.appendChild(wordSpan);
-        wordElements.push(wordSpan);
-
-        if (index < wordsArray.length - 1) {
-            element.appendChild(document.createTextNode(" "));
-        }
-    });
-
-    return { words: wordElements };
-}
-
+import {defaultUser} from "@/lib/utils";
+import {supabase} from "@/lib/supabase";
+import {toast} from "sonner";
+import { useIsAgendaOwner } from '@/hooks/useIsAgendaOwner';
 
 export default function Schedule() {
 
-    const textContainerRef = useRef<HTMLDivElement>(null);
-
-    // Lenis setup
     useEffect(() => {
         const lenis = new Lenis({
             // Optional: customize options here
-            lerp: 0.85, // Adjust for speed vs. smoothness (lower is smoother but can feel slower)
+            lerp: 0.80, // Adjust for speed vs. smoothness (lower is smoother but can feel slower)
             wheelMultiplier: 1.2, // Increase for faster mouse wheel scrolling
         });
 
@@ -64,136 +32,127 @@ export default function Schedule() {
         };
     }, []);
 
-    useEffect(() => {
-        const container = textContainerRef.current;
-        if (!container) return;
-
-        const h4Element = container.querySelector("h4");
-        const h1Element = container.querySelector("h1");
-
-        if (!h4Element || !h1Element) return;
-
-        document.fonts.ready.then(() => {
-            if (!textContainerRef.current || !h4Element || !h1Element) return;
-
-            textContainerRef.current.style.visibility = "visible";
-
-            const addTailwindClassesToWord = (word: HTMLElement) => {
-                word.classList.add(
-                    "inline-block", // Ensures proper layout and transform behavior
-                    "will-change-transform", // Optimizes transform animations
-                    "will-change-opacity" // Optimizes opacity animations
-                );
-            };
-
-            // Use customSplitText instead of splitText from motion-plus
-            const { words: h4Words } = customSplitText(h4Element, {
-                wordFormat: addTailwindClassesToWord,
-            });
-            const { words: h1Words } = customSplitText(h1Element, {
-                wordFormat: addTailwindClassesToWord,
-            });
-
-            // Animate h4 words
-            animate(
-                h4Words,
-                { opacity: [0, 1], y: [10, 0] },
-                {
-                    type: "spring",
-                    duration: 1.5, // Slightly shorter duration for subtitle
-                    bounce: 0,
-                    delay: stagger(0.05),
-                }
-            );
-
-            // Animate h1 words, starting after h4 animation begins
-            animate(
-                h1Words,
-                { opacity: [0, 1], y: [10, 0] },
-                {
-                    type: "spring",
-                    duration: 2,
-                    bounce: 0,
-                    delay: h4Words.length * 0.05 * 0.5, // Delay before starting h1 animation
-                }
-            );
-        });
-    }, []);
-
     const [isViewMode, setIsViewMode] = useState(false);
-    const [agenda, setAgenda] = useState<Agenda>({ author: defaultUser } as Agenda);
+    const [agenda, setAgenda] = useState<Agenda>({author: defaultUser} as Agenda);
+    const [isLoading, setIsLoading] = useState(true);
+    const isOwner = useIsAgendaOwner(agenda);
 
     const handleToggleViewMode = () => {
         setIsViewMode(!isViewMode);
     };
 
     const handleAgenda = (agenda: Agenda) => {
-        setAgenda({ ...agenda, author: defaultUser }); // Set a default author for the agenda
+        setAgenda({...agenda, author: defaultUser}); // Set a default author for the agenda
         setIsViewMode(true);
     };
 
     useEffect(() => {
         // Scroll to top when isViewMode changes
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.scrollTo({top: 0, behavior: "smooth"});
     }, [isViewMode]);
 
     // Example: in a useEffect after redirect
     useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
+        supabase.auth.getSession().then(({data: {session}}) => {
             if (session) {
                 console.log("User session:", session);
             }
         });
     }, []);
 
+    const fetchAgendaBySlug = async () => {
+        const searchParams = new URLSearchParams(window.location.search);
+        const slug = searchParams.get('slug');
+        console.log("Fetching agenda with slug:", slug);
+        if (slug) {
+            try {
+                const response = await fetch(`/api/agendas?slug=${slug}`);
+                if (!response.ok) {
+                    toast.error('Failed to fetch agenda. Please try again later.');
+                    throw new Error(`Failed to fetch agenda: ${response.statusText}`);
+                }
+                const fetchedAgenda: Agenda = await response.json();
+                console.log('Fetched agenda:', fetchedAgenda);
+                if (fetchedAgenda && fetchedAgenda.id) {
+                    setAgenda({...fetchedAgenda, author: fetchedAgenda.author || defaultUser});
+                    setIsViewMode(true); // Assuming you want to switch to view mode if agenda is loaded
+                } else {
+                    // Handle case where slug is present but agenda not found or is invalid
+                    setAgenda({author: defaultUser} as Agenda);
+                    setIsViewMode(false);
+                }
+                setIsLoading(false)
+            } catch (error) {
+                console.error("Error fetching agenda by slug:", error);
+                // Optionally, set to default agenda or show an error message
+                setAgenda({author: defaultUser} as Agenda);
+                setIsViewMode(false);
+                setIsLoading(false)
+            }
+        } else {
+            setAgenda({author: defaultUser} as Agenda);
+            setIsViewMode(false); // Or keep current view mode, depending on desired behavior
+            setIsLoading(false);
+        }
+    };
+
+    // Call this function in a useEffect, for example:
+    useEffect(() => {
+        fetchAgendaBySlug().then();
+        // Add dependencies if needed, e.g., if routing changes can occur without a full page reload
+    }, []);
+
     return (
         <>
-            <div
-                className={"mb-12" + (isViewMode ? " w-full sm:w-5xl text-center" : "")}
-                ref={textContainerRef}
-                style={{ visibility: "hidden" }}
-            >
-                <h4 className="text-lg sm:text-xl font-normal mb-4">
-                    The Big Schedule Agenda
-                </h4>
-                <h1 className="text-3xl sm:text-5xl font-light">
-                    {(isViewMode && agenda?.title) ? agenda.title : 'What schedule would you like to create today?'}
-                </h1>
-                {isViewMode && agenda.description && (
-                    <h4 className="text-lg sm:text-xl text-muted-foreground w-full sm:w-4xl font-normal mt-7">
-                        {agenda.description}
-                    </h4>
-                )}
-            </div>
-            <div className="w-full flex flex-col justify-center">
-                <div className="flex flex-col items-center gap-4 sm:w-auto">
-                    <div className="flex justify-center w-full">
-                        <AnimatePresence mode="wait">
-                            {isViewMode ? (
-                                <motion.div
-                                    key="public-view"
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -10 }}
-                                    transition={{ duration: 0.3 }}
-                                >
-                                    <SchedulePublicView agenda={agenda} onBackToEdit={handleToggleViewMode} />
-                                </motion.div>
-                            ) : (
-                                <motion.div
-                                    key="create-view"
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -10 }}
-                                    transition={{ duration: 0.3 }}
-                                >
-                                    <ScheduleCreate onPreview={handleAgenda} agendaFromParent={agenda} />
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+            {isLoading ? (
+                <div>Is loading...</div>
+            ) : (
+                <>
+                    <div
+                        className={"mb-12" + (isViewMode ? " w-full sm:w-5xl text-center" : "")}>
+                        <h4 className="text-lg sm:text-xl font-normal mb-4">
+                            The Big Schedule Agenda
+                        </h4>
+                        <h1 className="text-3xl sm:text-5xl font-light">
+                            {(isViewMode && agenda?.title) ? agenda.title : 'What schedule would you like to create today?'}
+                        </h1>
+                        {isViewMode && agenda.description && (
+                            <h4 className="text-lg sm:text-xl text-muted-foreground w-full sm:w-4xl font-normal mt-7">
+                                {agenda.description}
+                            </h4>
+                        )}
                     </div>
-                </div>
-            </div>
+                    <div className="w-full flex flex-col justify-center">
+                        <div className="flex flex-col items-center gap-4 sm:w-auto">
+                            <div className="flex justify-center w-full">
+                                <AnimatePresence mode="wait">
+                                    {isViewMode ? (
+                                        <motion.div
+                                            key="public-view"
+                                            initial={{opacity: 0, y: 10}}
+                                            animate={{opacity: 1, y: 0}}
+                                            exit={{opacity: 0, y: -10}}
+                                            transition={{duration: 0.3}}
+                                        >
+                                            <SchedulePublicView agenda={agenda} isOwner={isOwner} onBackToEdit={handleToggleViewMode}/>
+                                        </motion.div>
+                                    ) : (
+                                        <motion.div
+                                            key="create-view"
+                                            initial={{opacity: 0, y: 10}}
+                                            animate={{opacity: 1, y: 0}}
+                                            exit={{opacity: 0, y: -10}}
+                                            transition={{duration: 0.3}}
+                                        >
+                                            <ScheduleCreate onPreview={handleAgenda} agendaFromParent={agenda}/>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
         </>
     );
 }

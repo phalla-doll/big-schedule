@@ -24,13 +24,24 @@ export const mapUserToDatabaseUser = (user: User): Partial<DatabaseUser> => ({
   telegram_id: user.telegramId || null,
 });
 
-export const mapDatabaseAgendaToAgenda = (dbAgenda: DatabaseAgenda): Omit<Agenda, 'agendaItems' | 'author'> => ({
+export const mapDatabaseAgendaToAgenda = (dbAgenda: DatabaseAgenda): {
+  id: string;
+  title: string;
+  description: string | undefined;
+  ownerId: string;
+  isPublic: boolean;
+  createdAt: string;
+  slug: string;
+  agendaItems: AgendaItem[]
+} => ({
   id: dbAgenda.id,
   title: dbAgenda.title,
   description: dbAgenda.description || undefined,
   ownerId: dbAgenda.owner_id,
   isPublic: dbAgenda.is_public,
   createdAt: dbAgenda.created_at,
+  slug: dbAgenda.slug || '',
+  agendaItems: dbAgenda.agenda_items ? dbAgenda.agenda_items.map(mapDatabaseAgendaItemToAgendaItem) : [],
 });
 
 export const mapAgendaToDatabaseAgenda = (agenda: Agenda): Partial<DatabaseAgenda> => ({
@@ -40,6 +51,7 @@ export const mapAgendaToDatabaseAgenda = (agenda: Agenda): Partial<DatabaseAgend
   owner_id: agenda.ownerId,
   is_public: agenda.isPublic,
   created_at: agenda.createdAt,
+  slug: agenda.slug || '',
 });
 
 export const mapDatabaseAgendaItemToAgendaItem = (dbItem: DatabaseAgendaItem): AgendaItem => ({

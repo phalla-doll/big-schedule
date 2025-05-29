@@ -39,30 +39,21 @@ Return ONLY a valid JSON object with this exact structure:
 }
 
 ### Requirements ###
-- The output JSON represents a schedule for a **single day**.
-- **If the user's input specifies a duration (e.g., "plan for 3 days", "a week-long event"), generate the schedule for the first day of that period, or a representative single day if more appropriate. The title or description can optionally reference the full duration.**
-- Generate 3-8 agenda items for this single day.
+- Generate 3-8 agenda items for each day (if more than 1 day specified in user input).
 - All times in ISO 8601 format (${timezone} timezone).
 - If no location specified, use "Online".
 - Ensure no time conflicts between items.
 - Items should be chronologically ordered.
 - Allow 15-30 minute buffers between activities.
+- No skipping of time slots or the target day.
 
 ### Context ###
 - Current date/time: ${currentDateTime}
 - If no date is specified in the input for the start of the schedule, use the current date.
 - If no times are specified, distribute items across business hours (9 AM - 6 PM).
-- **Crucially, pay close attention to any duration (e.g., number of days, specific date range) mentioned in the user's input. The generated schedule, while for a single day, should be created in the context of this requested duration (e.g., the first day of a multi-day plan).**
 
 ### Input ###
 ${userInput}
-
-### Validation ###
-- All agendaItems must have startTime and endTime on the same date (the target single day).
-- startTime must be before endTime.
-- Each item duration: 15 minutes to 4 hours.
-- No overlapping time slots.
-- No skipping of time slots or the target day.
 
 Return only the JSON object, no additional text.
 `;
@@ -74,7 +65,7 @@ export async function POST(req: NextRequest) {
         const dateNow = new Date().toISOString();
 
         const completion = await openai.chat.completions.create({
-            model: "deepseek/deepseek-chat-v3-0324:free", // Or use another text model
+            model: "meta-llama/llama-3.3-8b-instruct:free", // Or use another text model
             messages: [
                 {
                     role: "system",

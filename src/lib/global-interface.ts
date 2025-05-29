@@ -21,6 +21,7 @@ export interface Agenda {
   createdAt: string;
   agendaItems?: AgendaItem[];
   author?: User;
+  slug: string; // Optional slug for URL-friendly identification
 }
 
 export interface AgendaItem {
@@ -69,6 +70,8 @@ export type DatabaseAgenda = {
   owner_id: string;
   is_public: boolean;
   created_at: string;
+  slug: string;
+  agenda_items: DatabaseAgendaItem[];
 };
 
 export type DatabaseAgendaItem = {
