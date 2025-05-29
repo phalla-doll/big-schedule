@@ -22,41 +22,19 @@ const createSchedulePrompt = ({ userInput, currentDateTime, timezone = 'UTC' }: 
 ### System Role ###
 You are a Schedule Planner Assistant specializing in converting natural language requests into structured daily agendas.
 
-### Output Format ###
-Return ONLY a valid JSON object with this exact structure:
-{
-  "title": "string (10-50 characters)",
-  "description": "string (50-150 characters)",
-  "agendaItems": [ // NOTE: The key MUST be "agendaItems" (plural), NOT "agendaItem"
-    {
-      "title": "string (5-30 characters)",
-      "description": "string (50-130 characters)",
-      "startTime": "ISO 8601 string",
-      "endTime": "ISO 8601 string",
-      "location": "string"
-    }
-  ]
-}
-
-### Requirements ###
-- Generate 3-8 agenda items for each day (if more than 1 day specified in user input).
+### Context ###
+- Current date/time: ${currentDateTime}.
 - All times in ISO 8601 format (${timezone} timezone).
+- If no date is specified in the input for the start of the schedule, use the current date.
+- If no times are specified, distribute items across business hours (9 AM - 6 PM).
+- No skipping of time slots or the target day.
 - If no location specified, use "Online".
 - Ensure no time conflicts between items.
 - Items should be chronologically ordered.
 - Allow 15-30 minute buffers between activities.
-- No skipping of time slots or the target day.
-
-### Context ###
-- Current date/time: ${currentDateTime}
-- If no date is specified in the input for the start of the schedule, use the current date.
-- If no times are specified, distribute items across business hours (9 AM - 6 PM).
 
 ### Input ###
-${userInput}
-
-Return only the JSON object, no additional text.
-`;
+${userInput}`;
 
 export async function POST(req: NextRequest) {
     try {
@@ -69,9 +47,78 @@ export async function POST(req: NextRequest) {
             messages: [
                 {
                     role: "system",
-                    content: createSchedulePrompt({ userInput: prompt, currentDateTime: dateNow }) || "You are an expert Schedule Planner Assistant. Your primary goal is to help me manage my calendar efficiently. You understand natural language for dates, times, locations, and event descriptions. You can create new events, modify existing ones, check for scheduling conflicts, and set reminders. Be proactive in suggesting optimal times and always confirm the details (What, When, Where, Who) before scheduling."
+                    content: "You are a Schedule Planner Assistant specializing in converting natural language requests into structured daily agendas.",
+                },
+                {
+                    role: "user",
+                    content: createSchedulePrompt({ userInput: prompt, currentDateTime: dateNow }),
                 }
             ],
+            response_format: {
+                type: "json_schema",
+                json_schema: {
+                    name: "schedule",
+                    strict: true,
+                    schema: {
+                        type: "object",
+                        properties: {
+                            title: {
+                                type: "string",
+                                description: "Schedule title (10-50 characters)",
+                                minLength: 10,
+                                maxLength: 50
+                            },
+                            description: {
+                                type: "string",
+                                description: "Schedule description (50-150 characters)",
+                                minLength: 50,
+                                maxLength: 150
+                            },
+                            agendaItems: {
+                                type: "array",
+                                description: "List of agenda items",
+                                minItems: 3,
+                                maxItems: 8,
+                                items: {
+                                    type: "object",
+                                    properties: {
+                                        title: {
+                                            type: "string",
+                                            description: "Agenda item title (5-30 characters)",
+                                            minLength: 5,
+                                            maxLength: 30
+                                        },
+                                        description: {
+                                            type: "string",
+                                            description: "Agenda item description (50-130 characters)",
+                                            minLength: 50,
+                                            maxLength: 130
+                                        },
+                                        startTime: {
+                                            type: "string",
+                                            format: "date-time",
+                                            description: "Start time in ISO 8601 format"
+                                        },
+                                        endTime: {
+                                            type: "string",
+                                            format: "date-time",
+                                            description: "End time in ISO 8601 format"
+                                        },
+                                        location: {
+                                            type: "string",
+                                            description: "Location of the agenda item"
+                                        }
+                                    },
+                                    required: ["title", "description", "startTime", "endTime", "location"],
+                                    additionalProperties: false
+                                }
+                            }
+                        },
+                        required: ["title", "description", "agendaItems"],
+                        additionalProperties: false
+                    }
+                }
+            }
         });
 
         let content = completion.choices[0].message.content;
