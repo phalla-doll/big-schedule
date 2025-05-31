@@ -2,6 +2,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { AgendaItem } from "@/lib/global-interface";
+import { DateTimeRangePicker } from "@/components/ui/date-time-range-pickter";
+import { isValid } from 'date-fns';
 
 interface AgendaDetailFormProps {
     detailItem: Partial<AgendaItem>;
@@ -14,6 +16,39 @@ export default function AgendaDetailForm({
     handleDetailChange,
     handleAddDetailItem,
 }: AgendaDetailFormProps) {
+    const handleDateTimeRangeUpdate = ({ range }: { range: { from: Date | undefined; to: Date | undefined } }) => {
+        console.log('range => ', range);
+        // Convert Date objects to datetime-local string format
+        const formatForInput = (date: Date | undefined) => {
+            if (!date || !isValid(date)) return '';
+            return date.toISOString().slice(0, 16);
+        };
+
+        // Update both startTime and endTime
+        const startTimeEvent = {
+            target: {
+                name: 'startTime',
+                value: formatForInput(range.from)
+            }
+        } as React.ChangeEvent<HTMLInputElement>;
+
+        const endTimeEvent = {
+            target: {
+                name: 'endTime', 
+                value: formatForInput(range.to)
+            }
+        } as React.ChangeEvent<HTMLInputElement>;
+
+        handleDetailChange(startTimeEvent);
+        handleDetailChange(endTimeEvent);
+    };
+
+    // Convert string values back to Date objects for the DateTimeRangePicker
+    const getDateFromString = (dateString: string | undefined) => {
+        if (!dateString) return undefined;
+        return new Date(dateString);
+    };
+
     return (
         <div className="flex flex-col gap-3">
             <Input
@@ -31,21 +66,11 @@ export default function AgendaDetailForm({
                 value={detailItem.description}
                 onChange={handleDetailChange}
             />
-            <Input
-                id="agenda-detail-start"
-                name="startTime"
-                type="datetime-local"
-                placeholder="Start time"
-                value={detailItem.startTime}
-                onChange={handleDetailChange}
-            />
-            <Input
-                id="agenda-detail-end"
-                name="endTime"
-                type="datetime-local"
-                placeholder="End time"
-                value={detailItem.endTime}
-                onChange={handleDetailChange}
+            <DateTimeRangePicker
+                initialDateFrom={getDateFromString(detailItem.startTime)}
+                initialDateTo={getDateFromString(detailItem.endTime)}
+                onUpdate={handleDateTimeRangeUpdate}
+                className="w-full"
             />
             <Input
                 id="agenda-detail-location"

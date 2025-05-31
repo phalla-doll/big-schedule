@@ -77,6 +77,7 @@ export default function ScheduleCreate({ onPreview, agendaFromParent }: { onPrev
 
     // Add detail item to agendaItems
     const handleAddDetailItem = () => {
+        console.log('detailItem => ', detailItem);
         if (!detailItem.title || !detailItem.startTime) return; // minimal validation
         setAgenda(prev => {
             const newItem: AgendaItem = {
